@@ -1,0 +1,25 @@
+{
+  "name": "SomaNews",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Junyoung Park"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/SomaNews/somanews-webapp",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.0",
+    "font-awesome": "fontawesome#^4.6.3",
+    "bourbon": "^4.2.7",
+    "simple-line-icons": "^2.3.2"
+  }
+}
