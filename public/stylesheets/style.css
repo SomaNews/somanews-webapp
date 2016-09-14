@@ -322,7 +322,4 @@ img::selection, img::-moz-selection {
   color: white;
   background: transparent; }
 
-body {
-  webkit-tap-highlight-color: #222222; }
-
 /*# sourceMappingURL=style.css.map */

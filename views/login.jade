@@ -1,0 +1,21 @@
+//
+   Created by Junyoung on 2016-09-14.
+
+extends layout
+
+block content
+    #login-modal.modal.show(tabindex='-1', role='dialog', aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h1.text-center SomaNews Login
+                .modal-body
+                    form.form.col-md-12.center-block
+                        .form-group
+                            input.form-control.input-lg(type='text', placeholder='Email')
+                        .form-group
+                            input.form-control.input-lg(type='password', placeholder='Password')
+                .modal-footer
+                    .col-md-12
+                        .form-group
+                            button.btn.btn-primary.btn-lg.btn-block LOGIN
