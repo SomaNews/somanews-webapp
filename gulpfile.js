@@ -7,21 +7,21 @@ var sass = require('gulp-sass');
 var nodemon = require('gulp-nodemon');
 
 // Lint Task
-gulp.task('lint', function() {
+gulp.task('lint', function () {
     return gulp.src(['app.js', 'routes/**/*.js', 'models/**/*.js', 'config/**/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
 // Compile Our Sass
-gulp.task('sass', function() {
-    return gulp.src('sass/*.scss')
-        .pipe(sass().on('error', sass.logError))
+gulp.task('sass', function () {
+    return gulp.src('scss/*.scss')
+        .pipe(sass())
         .pipe(gulp.dest('public/stylesheets'));
 });
 
 // Watch Files For Changes
-gulp.task('watch', function() {
+gulp.task('watch', function () {
     gulp.watch('scss/**/*.scss', ['sass']);
 });
 
