@@ -4,10 +4,19 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var fs = require('fs');
+var mongoose = require('mongoose');
+var join = require('path').join;
+var models = join(__dirname, 'models');
+
+fs.readdirSync(models)
+  .filter(file => ~file.search(/^[^\.].*\.js$/))
+  .forEach(file => require(join(models, file)));
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var port = process.env.PORT || 3000;
 var app = express();
 
 // view engine setup
@@ -64,5 +73,20 @@ app.use(function (err, req, res, next) {
     });
 });
 
+connect()
+.on('error', console.log)
+.on('disconnected', connect)
+.once('open', listen);
+
+function listen () {
+    console.log("Connected to mongod server");
+    if (app.get('env') === 'test') return;
+    console.log('Express app started on port ' + port);
+}
+
+function connect () {
+    var options = { server: { socketOptions: { keepAlive: 1 } } };
+    return mongoose.connect('mongodb://localhost:27017/test', options).connection;
+}
 
 module.exports = app;
