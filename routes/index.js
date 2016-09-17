@@ -15,4 +15,8 @@ router.get('/feed', function (req, res, next) {
     res.render('feed');
 });
 
+router.get('/feed/1', function (req, res, next) {
+    res.render('news');
+});
+
 module.exports = router;
