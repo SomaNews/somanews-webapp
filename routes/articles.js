@@ -6,9 +6,9 @@ var Article = mongoose.model('Article');
 
 /* GET home page. */
 router.get('/:id', function (req, res, next) {
-    var article = Article.findOne({ _id: req.params.id}, function(err, data){
-        if(err) throw err;
-        res.send(data);
+    Article.findOne({_id: req.params.id}, function (err, article) {
+        if (err) throw err;
+        res.render('article', {article: article});
     });
 });
 

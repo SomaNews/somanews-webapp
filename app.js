@@ -10,8 +10,8 @@ var join = require('path').join;
 var models = join(__dirname, 'models');
 
 fs.readdirSync(models)
-  .filter(file => ~file.search(/^[^\.].*\.js$/))
-  .forEach(file => require(join(models, file)));
+    .filter(file => ~file.search(/^[^\.].*\.js$/))
+    .forEach(file => require(join(models, file)));
 
 var crawler = require('./utils/crawler');
 var routes = require('./routes/index');
@@ -87,12 +87,12 @@ function listen () {
     console.log('Express app started on port ' + port);
     crawler.saveDummyData().then(function(){
         console.log('save dummy data to db.');
-    })
+    });
 }
 
 function connect () {
     var options = { server: { socketOptions: { keepAlive: 1 } } };
-    return mongoose.connect('mongodb://localhost:27017/test', options).connection;
+    return mongoose.connect('mongodb://ssomanews:ssomanews1029@ds021346.mlab.com:21346/somanews', options).connection;
 }
 
 module.exports = app;
