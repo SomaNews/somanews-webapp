@@ -12,7 +12,7 @@ module.exports.init = function() {
     var providerNames = ["chosun"];
 
     var date = new Date();
-    date.setHours(date.setHours() - 11);
+    date.setHours(date.getHours() - 11);
 
     var crawlers = providerNames.map(function(name){
         return new Crawler({
