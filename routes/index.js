@@ -14,7 +14,7 @@ router.get('/users', function (req, res, next) {
     res.render('login');
 });
 
-router.get('/feed', function (req, res, next) {
+router.get('/articles', function (req, res, next) {
     res.render('feed');
 });
 
@@ -33,10 +33,6 @@ router.post('/login', function (req, res, next) {
         // TODO 로그인 API 적용
         res.send('feed');
     });
-});
-
-router.get('/feed/1', function (req, res, next) {
-    res.render('news');
 });
 
 module.exports = router;
