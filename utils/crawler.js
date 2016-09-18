@@ -1,9 +1,36 @@
+var fs = require('fs');
 var mongoose = require('mongoose');
 var Article = mongoose.model('Article');
 var Crawler = mongoose.model('Crawler');
-var dateUtils = require('../utils/dateUtils');
-var defer = require('../utils/promiseUtils').defer;
+var dateUtils = require('./dateUtils');
+var crawled = require('./crawled');
+var defer = require('./promiseUtils').defer;
 var PythonShell = require('python-shell');
+
+/*
+    더미 데이터 추가
+*/
+module.exports.saveDummyData = function() {
+    var deferred = defer();
+
+    Article.count({}, function(err, count){
+        console.log( "Number of articles:", count);
+        if(count == 0) {
+            var articles = crawled.data.map(function(d){
+                return new Article(d);
+            })
+            Article.insertMany(articles).then(function(r){
+                deferred.resolve('success');
+            }).catch(function(err){
+                deferred.resolve(err);
+            })
+        } else {
+            deferred.resolve('success');
+        }
+    })
+
+    return deferred.promise;
+};
 
 /*
     크롤링 할 대상 추가

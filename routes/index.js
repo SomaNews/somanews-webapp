@@ -4,8 +4,6 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
-var crawler = require('../utils/crawler');
-
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index');
@@ -18,33 +16,6 @@ router.get('/users', function (req, res, next) {
 
 router.get('/feed', function (req, res, next) {
     res.render('feed');
-});
-
-router.get('/init', function (req, res, next) {
-    crawler.init()
-    .then(function(articles) {
-         console.log("crawler initialized.");
-         res.send('success');
-    })
-    .catch(function(err) {
-        /* Error handling */
-        console.error(err);
-        res.send(err);
-    });
-});
-
-/* Crawler TEST */
-router.get('/crawl', function (req, res, next) {
-    crawler.crawl()
-    .then(function(articles) {
-         console.log("Complete save articles.");
-         res.send('success');
-    })
-    .catch(function(err) {
-        /* Error handling */
-        console.error(err);
-        res.send(err);
-    });
 });
 
 /*
