@@ -3,12 +3,13 @@ module.exports.defer = function() {
 }
 
 function Deferred() {
+    var self = this;
     this.hasCanceled_ = false
     this.promise = new Promise(function(resolve, reject) {
-        this.resolve = function(val) {
-            this.hasCanceled_ ? reject({isCanceled: true}) : resolve(val)
+        self.resolve = function(val) {
+            self.hasCanceled_ ? reject({isCanceled: true}) : resolve(val)
         }
-        this.reject = reject
+        self.reject = reject
     })
 
     this.cancel = function() {
