@@ -65,7 +65,8 @@ module.exports.crawl = function(){
 function crawlExcuter(crawler){
     var deferred = defer();
 
-    PythonShell.run('crawler.py', {
+    PythonShell.run('somanews-crawler/crawlermain.py', {
+        pythonPath: "python3",
         args: [crawler.name, crawler.last]
     }, function (err, results) {
         if (err) throw err;
