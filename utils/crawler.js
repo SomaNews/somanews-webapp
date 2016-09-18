@@ -1,6 +1,25 @@
 var mongoose = require('mongoose');
 var Article = mongoose.model('Article');
+var Crawler = mongoose.model('Crawler');
 var dateUtils = require('../utils/dateUtils');
+var defer = require('../utils/promiseUtils').defer;
+var PythonShell = require('python-shell');
+
+/*
+    크롤링 할 대상 추가
+ */
+module.exports.init = function() {
+    var providerNames = ["chosun"];
+
+    var crawlers = providerNames.map(function(name){
+        return new Crawler({
+            name: name,
+            last: new Date()
+        });
+    });
+
+    return Crawler.insertMany(crawlers);
+};
 
 /*
     크롤러 실행
@@ -8,37 +27,65 @@ var dateUtils = require('../utils/dateUtils');
     return Promise
  */
 module.exports.crawl = function(){
-    var targets = JSON.parse(haniRssStr);
-    var articles = [];
+    var deferred = defer();
 
-    for (var i = 0; i < targets.length; i++) {
-         var target = targets[i];
-         var results = crawlExcuter(target.rss);
-         results.forEach(function(result){
-             var article = {
-                 title: result.title,
-                 author: result.author,
-                 link: result.link,
-                 provider: target.provider,
-                 category: target.category,
-                 description: result.description,
-                 publishedAt: result.publishedAt
-             };
-             articles.push(new Article(article));
-         });
-    }
-    return Article.insertMany(articles);
+    Crawler.find(function(err, crawlers){
+        if(err){
+            reject(err);
+        } else {
+            console.log(crawlers);
+
+            var crawlerPromises = crawlers.map(function(crawler){
+                return crawlExcuter(crawler);
+            });
+
+            Promise.all(crawlerPromises).then(function(results) {
+                var articles = [];
+                results.forEach(function(result){
+                    var article = {
+                        title: result.title,
+                        author: result.author,
+                        link: result.link,
+                        provider: result.provider,
+                        category: result.category,
+                        description: result.description,
+                        publishedAt: result.publishedAt
+                    };
+                    articles.push(new Article(article));
+                });
+                Article.insertMany(articles).then(function(r){
+                    deferred.resolve(r);
+                }).catch(function(err){
+                    deferred.reject(err);
+                })
+
+            });
+        }
+    })
+
+    return deferred.promise;
 };
 
 function crawlExcuter(rss){
     // TODO : 크롤러 결과값 받아오기
-    return [{
-        title: "Hello",
-        author: "정의길",
-        link: rss,
-        description: "test description",
-        publishedAt: new Date()
-    }];
+    var deferred = defer();
+    Crawler.find(function(err, docs){
+        return [{
+            title: "Hello",
+            author: "정의길",
+            link: rss,
+            description: "test description",
+            publishedAt: new Date()
+        }];
+        console.log(docs);
+    })
+    /*
+       PythonShell.run('my_script.py', function (err) {
+         if (err) throw err;
+         console.log('finished');
+       });
+     */
+    return deferred;
 };
 
 function crawlHaniRss() {
