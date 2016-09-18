@@ -21,7 +21,7 @@ router.get('/:id/feed', function (req, res, next) {
  */
 router.get('/:id/articles', function (req, res, next) {
     Article.aggregate([
-         { $match : { publishedAt : { $gt: dateUtils.getYesterday() } } },
+        //  { $match : { publishedAt : { $gt: dateUtils.getYesterday() } } },
          { $group : { _id : "$category", articles: { $push: "$$ROOT" } } }
     ],
     function (err, result) {

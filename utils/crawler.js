@@ -11,10 +11,13 @@ var PythonShell = require('python-shell');
 module.exports.init = function() {
     var providerNames = ["chosun"];
 
+    var date = new Date();
+    date.setHours(date.setHours() - 11);
+
     var crawlers = providerNames.map(function(name){
         return new Crawler({
             name: name,
-            last: new Date()
+            last: date
         });
     });
 
@@ -35,19 +38,22 @@ module.exports.crawl = function(){
             return crawlExcuter(crawler);
         });
 
-        Promise.all(crawlerPromises).then(function(results) {
+        Promise.all(crawlerPromises).then(function(crawlResults) {
             var articles = [];
-            results.forEach(function(result){
-                var article = {
-                    title: result.title,
-                    author: result.author,
-                    link: result.link,
-                    provider: result.provider,
-                    category: result.category,
-                    description: result.description,
-                    publishedAt: result.publishedAt
-                };
-                articles.push(new Article(article));
+            crawlResults.forEach(function(raw){
+                var rawArticles = JSON.parse(raw);
+                rawArticles.forEach(function(rawArticle){
+                    var article = {
+                        title: rawArticle.title,
+                        author: rawArticle.author,
+                        link: rawArticle.link,
+                        provider: rawArticle.provider,
+                        category: rawArticle.category,
+                        description: rawArticle.description,
+                        publishedAt: new Date(rawArticle.publishedAt * 1000)
+                    };
+                    articles.push(new Article(article));
+                });
             });
 
             Article.insertMany(articles).then(function(r){
@@ -65,12 +71,16 @@ module.exports.crawl = function(){
 function crawlExcuter(crawler){
     var deferred = defer();
 
+    var startTime = new Date()
     PythonShell.run('somanews-crawler/crawlermain.py', {
         pythonPath: "python3",
-        args: [crawler.name, crawler.last]
+        args: [crawler.name, (crawler.last.getTime() / 1000) | 0]
     }, function (err, results) {
         if (err) throw err;
-        deferred.resolve(results);
+        Crawler.update({ name: crawler.name }, { last: startTime }, function(err) {
+            if (err) throw err;
+            deferred.resolve(results);
+        })
     });
 
     return deferred.promise;
