@@ -15,65 +15,16 @@ block content
         // Page Features
         .row.text-center
             ul.list-unstyled
-                li.col-md-3.col-sm-6.feed-body
-                    .thumbnail
-                        a(href='feed/1')
-                            img(src='http://placehold.it/800x500', alt='')
-                            .caption
-                                h3 Feature Label
-                                p Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                hr
-                                p 관련기사 0건
+                each article in articles
+                    li.col-md-3.col-sm-6.feed-body
+                        .thumbnail
+                            a(href='/articles/#{article.id}')
+                                img(src='#{article.imageUrl}', alt='')
+                                .caption
+                                    h3 #{article.title}
+                                    p #{article.description}
+                                    hr
+                                    p 관련기사 0건
 
-
-                li.col-md-3.col-sm-6.feed-body
-                    .thumbnail
-                        a(href='feed/1')
-                            img(src='http://placehold.it/800x500', alt='')
-                            .caption
-                                h3 Feature Label
-                                p Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                hr
-                                p 관련기사 0건
-
-                li.col-md-3.col-sm-6.feed-body
-                    .thumbnail
-                        a(href='feed/1')
-                            img(src='http://placehold.it/800x500', alt='')
-                            .caption
-                                h3 Feature Label
-                                p Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                hr
-                                p 관련기사 0건
-
-                li.col-md-3.col-sm-6.feed-body
-                    .thumbnail
-                        a(href='feed/1')
-                            img(src='http://placehold.it/800x500', alt='')
-                            .caption
-                                h3 Feature Label
-                                p Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                hr
-                                p 관련기사 0건
-
-                li.col-md-3.col-sm-6.feed-body
-                    .thumbnail
-                        a(href='feed/1')
-                            img(src='http://placehold.it/800x500', alt='')
-                            .caption
-                                h3 Feature Label
-                                p Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                hr
-                                p 관련기사 0건
-
-                li.col-md-3.col-sm-6.feed-body
-                    .thumbnail
-                        a(href='feed/1')
-                            img(src='http://placehold.it/800x500', alt='')
-                            .caption
-                                h3 Feature Label
-                                p Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                hr
-                                p 관련기사 0건
         // /.row
         hr

@@ -10,11 +10,13 @@ var join = require('path').join;
 var models = join(__dirname, 'models');
 
 fs.readdirSync(models)
-  .filter(file => ~file.search(/^[^\.].*\.js$/))
-  .forEach(file => require(join(models, file)));
+    .filter(file => ~file.search(/^[^\.].*\.js$/))
+    .forEach(file => require(join(models, file)));
 
+var crawler = require('./utils/crawler');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var articles = require('./routes/articles');
 
 var port = process.env.PORT || 3000;
 var app = express();
@@ -41,6 +43,7 @@ app.use('/bower_components', express.static(path.join(__dirname, '/bower_compone
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/articles', articles);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -82,11 +85,14 @@ function listen () {
     console.log("Connected to mongod server");
     if (app.get('env') === 'test') return;
     console.log('Express app started on port ' + port);
+    crawler.saveDummyData().then(function(){
+        console.log('save dummy data to db.');
+    });
 }
 
 function connect () {
     var options = { server: { socketOptions: { keepAlive: 1 } } };
-    return mongoose.connect('mongodb://localhost:27017/test', options).connection;
+    return mongoose.connect('mongodb://ssomanews:ssomanews1029@ds021346.mlab.com:21346/somanews', options).connection;
 }
 
 module.exports = app;
