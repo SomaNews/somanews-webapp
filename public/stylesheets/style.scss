@@ -108,46 +108,46 @@ p {
     }
 }
 
-@media (min-width: 768px) {
-    .navbar-default {
-        background-color: transparent;
-        border-color: transparent;
-        .navbar-header .navbar-brand {
-            color: rgba(255, 255, 255, 0.7);
-            &:hover, &:focus {
-                color: white;
-            }
-        }
-        .nav > li > a {
-            color: rgba(255, 255, 255, 0.7);
-            &:focus {
-                color: rgba(255, 255, 255, 0.7);
-            }
-            &:hover, &:focus:hover {
-                color: white;
-            }
-        }
-        &.affix {
-            background-color: white;
-            border-color: rgba(34, 34, 34, 0.1);
-            .navbar-header .navbar-brand {
-                color: #222222;
-                &:hover, &:focus {
-                    color: #fdcc52;
-                }
-            }
-            .nav > li > a {
-                color: #222222;
-                &:focus {
-                    color: #222222;
-                }
-                &:hover, &:focus:hover {
-                    color: #fdcc52;
-                }
-            }
-        }
-    }
-}
+//@media (min-width: 768px) {
+//    .navbar-default {
+//        background-color: transparent;
+//        border-color: transparent;
+//        .navbar-header .navbar-brand {
+//            color: rgba(255, 255, 255, 0.7);
+//            &:hover, &:focus {
+//                color: white;
+//            }
+//        }
+//        .nav > li > a {
+//            color: rgba(255, 255, 255, 0.7);
+//            &:focus {
+//                color: rgba(255, 255, 255, 0.7);
+//            }
+//            &:hover, &:focus:hover {
+//                color: white;
+//            }
+//        }
+//        &.affix {
+//            background-color: white;
+//            border-color: rgba(34, 34, 34, 0.1);
+//            .navbar-header .navbar-brand {
+//                color: #222222;
+//                &:hover, &:focus {
+//                    color: #fdcc52;
+//                }
+//            }
+//            .nav > li > a {
+//                color: #222222;
+//                &:focus {
+//                    color: #222222;
+//                }
+//                &:hover, &:focus:hover {
+//                    color: #fdcc52;
+//                }
+//            }
+//        }
+//    }
+//}
 
 header {
     position: relative;
