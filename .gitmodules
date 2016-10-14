@@ -1,3 +1,0 @@
-[submodule "somanews-crawler"]
-	path = somanews-crawler
-	url = git@github.com:SomaNews/somanews-crawler.git

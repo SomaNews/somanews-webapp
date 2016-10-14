@@ -85,9 +85,9 @@ function listen () {
     console.log("Connected to mongod server");
     if (app.get('env') === 'test') return;
     console.log('Express app started on port ' + port);
-    crawler.saveDummyData().then(function(){
-        console.log('save dummy data to db.');
-    });
+    // crawler.saveDummyData().then(function(){
+    //     console.log('save dummy data to db.');
+    // });
 }
 
 function connect () {
