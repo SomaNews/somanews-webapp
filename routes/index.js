@@ -23,6 +23,23 @@ router.get('/articles', function (req, res, next) {
     });
 });
 
+// Article.aggregate({
+//     $group: {_id: "$cluster", count: {$sum: 1}}
+// })
+
+// Article.aggregate([
+//     {
+//         $group: {
+//             _id: "$cluster"
+//         }
+//     },
+//     {
+//         $sort: {
+//             "publishedAt": -1
+//         }
+//     }
+// ])
+
 /*
  계정이 있으면 로그인을 하고 없으면 새로 생성한다.
 

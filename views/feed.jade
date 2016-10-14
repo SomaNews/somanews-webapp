@@ -19,7 +19,10 @@ block content
                     li.col-md-3.col-sm-6.feed-body
                         .thumbnail
                             a(href='/articles/#{article.id}')
-                                img(src='#{article.imageUrl}', alt='')
+                                if(article.imageURL)
+                                    img(src='#{article.imageURL}', alt='')
+                                else
+                                    img(src='http://placehold.it/800x500', alt='')
                                 .caption
                                     h3 #{article.title}
                                     p #{article.description}
