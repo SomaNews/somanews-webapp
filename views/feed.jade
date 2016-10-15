@@ -15,19 +15,20 @@ block content
         // Page Features
         .row.text-center
             ul.list-unstyled
-                each article in articles
+                each cluster in clusters
                     li.col-md-3.col-sm-6.feed-body
                         .thumbnail
-                            a(href='/articles/#{article.id}')
-                                if(article.imageURL)
-                                    img(src='#{article.imageURL}', alt='')
+                            a(href='/articles/#{cluster.id}')
+                                if(cluster.imageURL)
+                                    img(src='#{cluster.imageURL}', alt='')
                                 else
                                     img(src='http://placehold.it/800x500', alt='')
                                 .caption
-                                    h3 #{article.title}
-                                    p #{article.description}
+                                    h3 #{cluster.title}
+                                    p #{cluster.description}
+                                .count
                                     hr
-                                    p 관련기사 0건
+                                    p 관련기사 #{cluster.count}건
 
         // /.row
         hr

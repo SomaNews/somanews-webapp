@@ -1,11 +1,26 @@
 /*!
  * Software Maestro 7th, SomaNews
  */
+
 .feed-container {
   margin: 80px 250px auto; }
 
 .feed-body {
   margin-bottom: 30px; }
+
+.feed-body .thumbnail {
+  height: 500px; }
+
+.feed-body .thumbnail .caption {
+  height: 200px; }
+
+.feed-body .thumbnail .count {
+  height: 100px; }
+
+.feed-body .img {
+  position: absolute;
+  width: 100%;
+  height: auto; }
 
 #login-modal {
   font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
@@ -14,7 +29,7 @@
   -moz-background-size: cover;
   background-size: cover;
   -o-background-size: cover;
-  background: center url("../../images/login.jpg");
+  background: center url("../images/login.jpg");
   padding: 250px 0; }
 
 .modal-footer .btn {

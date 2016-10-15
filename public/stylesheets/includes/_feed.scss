@@ -4,4 +4,18 @@
 
 .feed-body {
     margin-bottom: 30px;
+    .thumbnail {
+        height: 500px;
+        .caption {
+            height: 200px;
+        }
+        .count {
+            height: 100px;
+        }
+    }
+    .img {
+        position: absolute;
+        width: 100%;
+        height: auto;
+    }
 }
