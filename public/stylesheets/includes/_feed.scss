@@ -1,16 +1,19 @@
 .feed-container {
     margin: 80px 250px auto;
+    .jumbotron.hero-spacer {
+        padding: 50px;
+    }
 }
 
 .feed-body {
     margin-bottom: 30px;
     .thumbnail {
-        height: 500px;
+        height: 40%;
         .caption {
-            height: 200px;
+            height: 40%;
         }
         .count {
-            height: 100px;
+            height: 20%;
         }
     }
     .img {

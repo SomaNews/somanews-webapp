@@ -7,6 +7,12 @@ block content
 
     .feed-container
         // Title
+        .jumbotron.hero-spacer
+            h1 Today News Highlight!
+            p
+                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.
+            p
+
         .row
             .col-lg-12
                 h3 Today News
@@ -20,9 +26,9 @@ block content
                         .thumbnail
                             a(href='/articles/#{cluster.id}')
                                 if(cluster.imageURL)
-                                    img(src='#{cluster.imageURL}', alt='')
+                                    img.img-responsive(src='#{cluster.imageURL}', alt='')
                                 else
-                                    img(src='http://placehold.it/800x500', alt='')
+                                    img.img-responsive(src='http://placehold.it/800x500', alt='')
                                 .caption
                                     h3 #{cluster.title}
                                     p #{cluster.description}

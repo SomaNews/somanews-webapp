@@ -5,17 +5,20 @@
 .feed-container {
   margin: 80px 250px auto; }
 
+.feed-container .jumbotron.hero-spacer {
+  padding: 50px; }
+
 .feed-body {
   margin-bottom: 30px; }
 
 .feed-body .thumbnail {
-  height: 500px; }
+  height: 40%; }
 
 .feed-body .thumbnail .caption {
-  height: 200px; }
+  height: 40%; }
 
 .feed-body .thumbnail .count {
-  height: 100px; }
+  height: 20%; }
 
 .feed-body .img {
   position: absolute;
