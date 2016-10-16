@@ -13,7 +13,6 @@ fs.readdirSync(models)
     .filter(file => ~file.search(/^[^\.].*\.js$/))
     .forEach(file => require(join(models, file)));
 
-var crawler = require('./utils/crawler');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var articles = require('./routes/articles');
@@ -85,9 +84,6 @@ function listen () {
     console.log("Connected to mongod server");
     if (app.get('env') === 'test') return;
     console.log('Express app started on port ' + port);
-    crawler.saveDummyData().then(function(){
-        console.log('save dummy data to db.');
-    });
 }
 
 function connect () {

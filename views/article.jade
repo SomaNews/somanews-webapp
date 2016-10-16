@@ -25,7 +25,10 @@ block content
                         |  Posted on #{article.publishedAt}
                     hr
                     // Preview Image
-                    img.img-responsive(src='#{article.imageUrl}', alt='')
+                    if(article.imageURL)
+                        img.img-responsive(src='#{article.imageURL}', alt='')
+                    else
+                        img.img-responsive(src='http://placehold.it/800x500', alt='')
                     hr
                     // Post Content
                     p.lead

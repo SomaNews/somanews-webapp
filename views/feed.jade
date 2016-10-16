@@ -7,6 +7,12 @@ block content
 
     .feed-container
         // Title
+        .jumbotron.hero-spacer
+            h1 Today News Highlight!
+            p
+                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.
+            p
+
         .row
             .col-lg-12
                 h3 Today News
@@ -15,16 +21,20 @@ block content
         // Page Features
         .row.text-center
             ul.list-unstyled
-                each article in articles
+                each cluster in clusters
                     li.col-md-3.col-sm-6.feed-body
                         .thumbnail
-                            a(href='/articles/#{article.id}')
-                                img(src='#{article.imageUrl}', alt='')
+                            a(href='/articles/#{cluster.clusters[0].id}')
+                                if(cluster.clusters[0].imageURL)
+                                    img.img-responsive(src='#{cluster.clusters[0].imageURL}', alt='')
+                                else
+                                    img.img-responsive(src='http://placehold.it/800x500', alt='')
                                 .caption
-                                    h3 #{article.title}
-                                    p #{article.description}
+                                    h3 #{cluster.clusters[0].title}
+                                    p #{cluster.clusters[0].description}
+                                .count
                                     hr
-                                    p 관련기사 0건
+                                    p 관련기사 #{cluster.count}건
 
         // /.row
         hr
