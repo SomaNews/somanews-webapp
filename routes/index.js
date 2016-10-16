@@ -18,11 +18,6 @@ router.get('/login', function (req, res, next) {
 
 /* GET articles page. */
 router.get('/articles', function (req, res, next) {
-    // Article.find({}, function (err, articles) {
-    //     if (err) throw err;
-    //     res.render('feed', {articles: articles});
-    // });
-
     Cluster.aggregate([
         { $sort : { "publishedAt": -1 } },
         { $group : {
@@ -42,7 +37,7 @@ router.get('/articles', function (req, res, next) {
             values.push(result.clusters);
         });
         res.render('feed', {clusters: clusters});
-        console.log(values[0]);
+        console.log(clusters);
     });
 });
 
