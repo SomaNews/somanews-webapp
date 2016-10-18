@@ -16,6 +16,7 @@ fs.readdirSync(models)
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var articles = require('./routes/articles');
+var newsStat = require('./routes/newsStat');
 
 var port = process.env.PORT || 3000;
 var app = express();
@@ -43,6 +44,7 @@ app.use('/bower_components', express.static(path.join(__dirname, '/bower_compone
 app.use('/', routes);
 app.use('/users', users);
 app.use('/articles', articles);
+app.use('/newsStat', newsStat);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
