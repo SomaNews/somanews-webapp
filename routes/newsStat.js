@@ -34,4 +34,24 @@ router.get('/:year/:mon/:date', function (req, res, next) {
     });
 });
 
+// by graph
+router.get('/', function (req, res, next) {
+    var minimumDate = addDays(new Date(), -50);
+    Article.aggregate([
+        { $match: { publishedAt: { $gte: minimumDate} } },
+        { $project: { ymd: { $dateToString: { format: "%Y-%m-%d", date: "$publishedAt" } } } },
+        { $group: { _id: "$ymd", count: {$sum: 1} } },
+        { $sort : { "_id": 1 } },
+    ],
+    function (err, result) {
+        if (err) {
+            res.send(err);
+            return;
+        }
+        console.log(result);
+        res.render('newsGraph', {'countList': result});
+    });
+});
+
+
 module.exports = router;
