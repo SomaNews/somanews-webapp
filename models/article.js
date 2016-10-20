@@ -11,7 +11,9 @@ var ArticleSchema = new Schema({
     providerNewsID: {type: Number, default: ''},
     category: {type: String, default: ''},
     description: {type: String, default: ''},
-    publishedAt: {type: Date, default: null}
+    publishedAt: {type: Date, default: null},
+    cluster: {type: Number, default: ''},
+    vector: {type: Array, default: null}
 });
 
 mongoose.model('Article', ArticleSchema);

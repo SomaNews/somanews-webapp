@@ -21,20 +21,20 @@ block content
         // Page Features
         .row.text-center
             ul.list-unstyled
-                each cluster in clusters
+                each article in articles
                     li.col-md-3.col-sm-6.feed-body
                         .thumbnail
-                            a(href='/articles/#{cluster.clusters[0]._id}')
-                                if(cluster.clusters[0].imageURL)
-                                    img.img-responsive(src='#{cluster.clusters[0].imageURL}', alt='')
+                            a(href='/articles/#{article.clusters[0]._id}')
+                                if(article.clusters[0].imageURL)
+                                    img.img-responsive(src='#{article.clusters[0].imageURL}', alt='')
                                 else
                                     img.img-responsive(src='http://placehold.it/800x500', alt='')
                                 .caption
-                                    h3 #{cluster.clusters[0].title}
-                                    p #{cluster.clusters[0].description}
+                                    h3 #{article.clusters[0].title}
+                                    p #{article.clusters[0].description}
                                 .count
                                     hr
-                                    p 관련기사 #{cluster.count}건
+                                    p 관련기사 #{article.count}건
 
         // /.row
         hr
