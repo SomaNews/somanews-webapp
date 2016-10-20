@@ -10,7 +10,6 @@ var UserSchema = new mongoose.Schema({
 var User = mongoose.model('User', UserSchema);
 
 
-
 // Login using passport-local
 var LocalStrategy = require('passport-local').Strategy;
 
@@ -38,34 +37,58 @@ passport.use(new LocalStrategy(
                 }
 
                 if (yes) {
+                    console.log('login as ' + email + ' succeeded');
                     return done(null, user);
                 }
+                console.log('login as ' + email + ' failed');
                 return done(null, false, {message: 'Incorrect password.'});
             });
         });
     }
 ));
 
+passport.serializeUser(function(user, done) {
+    'use strict';
+    done(null, user._id);
+});
+
+passport.deserializeUser(function (id, done) {
+    'use strict';
+    User.findById(id, function (err, user) {
+        done(err, user);
+    });
+});
+
+/**
+ * Check if email is valid
+ * @param email Input
+ */
+function validateEmail(email) {
+    'use strict';
+
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
 
 /**
  * Callback for adding two numbers.
  *
  * @callback hasUserCallback
- * @param {Error} err - Error
- * @param {boolean} yes - Has user?
+ * @param err - Error
+ * @param yes - Has user?
  */
 
 /**
- * @param  {str} email - Email
- * @param  {hasUserCallback} callback - Callback
+ * @param email - Email
+ * @param {hasUserCallback} callback - Callback
  */
 function hasUserWithEmail(email, callback) {
     'use strict';
     User.findOne({email: email}, function (err, user) {
         if (err || user === null) {
-            callback(err, false);
+            return callback(err, false);
         }
-        callback(err, true);
+        return callback(err, true);
     });
 }
 
@@ -74,31 +97,45 @@ exports.hasUserWithEmail = hasUserWithEmail;
 
 /**
  * Add user to database.
- * @param {str} email : Email for user
- * @param {str} password : Plaintext password for user
- * @param {Function} callback(err, isUserAdded) : Callback
+ * @param email - Email for user
+ * @param password - Plaintext password for user
+ * @param callback(err, isUserAdded) - Callback
  */
 function createUser(email, password, callback) {
     'use strict';
 
     var saltRounds = 10;
 
-    if (hasUserWithEmail(email)) {
-        callback(new Error('User with specified email already exists!'), false);
+    if (!validateEmail(email)) {
+        return callback(new Error('Invalid email'));
     }
 
-    // Hash password & append to db
-    bcrypt.hash(password, saltRounds, function (err, hash) {
+    hasUserWithEmail(email, function (err, yes) {
         if (err) {
-            callback(err, false);
+            return callback(err, false);
         }
-
-        var user = new User({email: email, passwordHash: hash});
-        user.save(function (err) {
+        if (yes) {
+            return callback(new Error('User with specified email already exists!'), false);
+        }
+        // Hash password & append to db
+        bcrypt.hash(password, saltRounds, function (err, hash) {
             if (err) {
-                callback(err, false);
+                return callback(err, false);
             }
-            return callback(null, true);
+
+            console.log('Creating new user');
+            console.log(' - email : ' + email);
+            console.log(' - password : ' + password);
+            console.log(' - hash : ' + hash);
+
+            var user = new User({email: email, passwordHash: hash});
+            user.save(function (err) {
+                if (err) {
+                    console.log(err.message);
+                    return callback(err, false);
+                }
+                return callback(null, true);
+            });
         });
     });
 }

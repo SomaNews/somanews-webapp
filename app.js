@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -6,6 +8,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var mongoose = require('mongoose');
+var passport = require('passport');
 var join = require('path').join;
 var models = join(__dirname, 'models');
 
@@ -17,6 +20,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var articles = require('./routes/articles');
 var newsStat = require('./routes/newsStat');
+var login = require('./routes/login');
 
 var port = process.env.PORT || 3000;
 var app = express();
@@ -37,6 +41,8 @@ app.use(require('node-sass-middleware')({
     indentedSyntax: true,
     sourceMap: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
