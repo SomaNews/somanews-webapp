@@ -49,5 +49,19 @@ module.exports.checkAuth = function (req, res, next) {
     if (req.user) {
         return next();
     }
-    return res.redirect('/login');
+
+    /// TODO : Edit test code
+    /// Login with test@test.com
+    User.findUserByEmail('test@test.com', function (err, user) {
+        if (err) {
+            return next(err);
+        }
+        req.login(user, function (err) {
+            if (err) {
+                return next(err);
+            }
+            return next();
+        });});
+
+    // return res.redirect('/login');
 };
