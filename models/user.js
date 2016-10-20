@@ -47,16 +47,14 @@ passport.use(new LocalStrategy(
     }
 ));
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
     'use strict';
-    done(null, user._id);
+    done(null, user);
 });
 
-passport.deserializeUser(function (id, done) {
+passport.deserializeUser(function (user, done) {
     'use strict';
-    User.findById(id, function (err, user) {
-        done(err, user);
-    });
+    done(null, user);
 });
 
 /**

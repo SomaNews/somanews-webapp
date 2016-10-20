@@ -42,3 +42,12 @@ module.exports = function (router) {
         });
     });
 };
+
+
+module.exports.checkAuth = function (req, res, next) {
+    'use strict';
+    if (req.user) {
+        return next();
+    }
+    return res.redirect('/login');
+};

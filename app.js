@@ -1,6 +1,7 @@
 'use strict';
 
 var express = require('express');
+var session = require('express-session')
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -41,6 +42,7 @@ app.use(require('node-sass-middleware')({
     indentedSyntax: true,
     sourceMap: true
 }));
+app.use(session({ secret: 'asjkdfhsdjkghiuerhv' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
