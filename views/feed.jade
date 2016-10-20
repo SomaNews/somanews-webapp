@@ -24,7 +24,7 @@ block content
                 each cluster in clusters
                     li.col-md-3.col-sm-6.feed-body
                         .thumbnail
-                            a(href='/articles/#{cluster.clusters[0].id}')
+                            a(href='/articles/#{cluster.clusters[0]._id}')
                                 if(cluster.clusters[0].imageURL)
                                     img.img-responsive(src='#{cluster.clusters[0].imageURL}', alt='')
                                 else
