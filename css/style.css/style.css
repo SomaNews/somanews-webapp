@@ -1,40 +1,32 @@
 /*!
  * Software Maestro 7th, SomaNews
  */
-
 .feed-container {
   margin: 80px 250px auto; }
-
-.feed-container .jumbotron.hero-spacer {
-  padding: 50px; }
+  .feed-container .jumbotron.hero-spacer {
+    padding: 50px; }
 
 .feed-body {
   margin-bottom: 30px; }
-
-.feed-body .thumbnail {
+  .feed-body .thumbnail {
     position: relative;
     height: 500px;
     overflow: hidden; }
-
-.feed-body .thumbnail .caption {
-    overflow: hidden;
-    text-overflow: ellipsis; }
-
-.feed-body .thumbnail .count {
-  height: auto; }
-
-.feed-body .img-wrapper {
-    width: 300px;
-    height: 250px;
-    overflow:hidden;
-}
-
-.feed-body .img-wrapper .img {
-    height: 100%;
-    min-width: 100%;
-    left: 50%;
-    position: relative;
-    transform: translateX(-50%); }
+    .feed-body .thumbnail .img-wrapper {
+      width: 300px;
+      height: 250px;
+      overflow: hidden; }
+      .feed-body .thumbnail .img-wrapper img {
+        height: 100%;
+        min-width: 100%;
+        left: 50%;
+        position: relative;
+        transform: translateX(-50%); }
+    .feed-body .thumbnail .caption {
+      overflow: hidden;
+      text-overflow: ellipsis; }
+    .feed-body .thumbnail .count {
+      height: auto; }
 
 #login-modal {
   font-family: 'Lato', 'Helvetica', 'Arial', 'sans-serif';
@@ -43,7 +35,7 @@
   -moz-background-size: cover;
   background-size: cover;
   -o-background-size: cover;
-  background: center url("../images/login.jpg");
+  background: center url("../../images/login.jpg");
   padding: 250px 0; }
 
 .modal-footer .btn {

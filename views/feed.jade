@@ -25,13 +25,14 @@ block content
                     li.col-md-3.col-sm-6.feed-body
                         .thumbnail
                             a(href='/articles/#{article.clusters[0]._id}')
-                                if(article.clusters[0].imageURL)
-                                    img.img-responsive(src='#{article.clusters[0].imageURL}', alt='')
-                                else
-                                    img.img-responsive(src='http://placehold.it/800x500', alt='')
+                                .img-wrapper
+                                    if(article.clusters[0].imageURL)
+                                        img(src='#{article.clusters[0].imageURL}', alt='')
+                                    else
+                                        img(src='http://placehold.it/800x500', alt='')
                                 .caption
                                     h3 #{article.clusters[0].title}
-                                    p #{article.clusters[0].description}
+                                    p #{article.clusters[0].description.substring(0, 50)}
                                 .count
                                     hr
                                     p 관련기사 #{article.count}건

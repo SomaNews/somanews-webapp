@@ -7,18 +7,31 @@
 
 .feed-body {
     margin-bottom: 30px;
+
     .thumbnail {
-        height: 40%;
+        position: relative;
+        height: 500px;
+        overflow: hidden;
+
+        .img-wrapper {
+            width: 300px;
+            height: 250px;
+            overflow:hidden;
+
+            img {
+                height: 100%;
+                min-width: 100%;
+                left: 50%;
+                position: relative;
+                transform: translateX(-50%);
+            }
+        }
         .caption {
-            height: 40%;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .count {
-            height: 20%;
+            height: auto;
         }
-    }
-    .img {
-        position: absolute;
-        width: 100%;
-        height: auto;
     }
 }
