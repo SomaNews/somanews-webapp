@@ -57,6 +57,24 @@ passport.deserializeUser(function (user, done) {
     done(null, user);
 });
 
+
+/**
+ * Find user by email
+ * @param email - email
+ * @param callback - callback(err, user)
+ */
+function findUserByEmail(email, callback) {
+    'use strict';
+    User.findOne({email: email}, function (err, user) {
+        if (err) {
+            return callback(err);
+        }
+        return callback(err, user);
+    });
+}
+
+exports.findUserByEmail = findUserByEmail;
+
 /**
  * Check if email is valid
  * @param email Input
