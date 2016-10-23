@@ -8,4 +8,28 @@
 
 .news-related {
     margin-bottom: 60px;
+
+    .thumbnail {
+        position: relative;
+        height: 400px;
+        overflow: hidden;
+
+        .img-wrapper {
+            width: 300px;
+            height: 180px;
+            overflow:hidden;
+
+            img {
+                height: 100%;
+                min-width: 100%;
+                left: 50%;
+                position: relative;
+                transform: translateX(-50%);
+            }
+        }
+        .caption {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
 }

@@ -48,10 +48,11 @@ block content
                                 li.col-md-4.col-sm-6.hero-feature
                                     a(href='/articles/#{related._id}')
                                         .thumbnail
-                                            if(related.imageURL)
-                                                img.img-responsive(src='#{related.imageURL}', alt='')
-                                            else
-                                                img.img-responsive(src='http://placehold.it/800x500', alt='')
+                                            .img-wrapper
+                                                if(related.imageURL)
+                                                    img.img-responsive(src='#{related.imageURL}', alt='')
+                                                else
+                                                    img.img-responsive(src='http://placehold.it/800x500', alt='')
                                             .caption
                                                 h3 #{related.title}
                                                 p.lead!= related.content

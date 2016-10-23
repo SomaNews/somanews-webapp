@@ -52,6 +52,23 @@
 
 .news-related {
   margin-bottom: 60px; }
+  .news-related .thumbnail {
+    position: relative;
+    height: 400px;
+    overflow: hidden; }
+    .news-related .thumbnail .img-wrapper {
+      width: 300px;
+      height: 180px;
+      overflow: hidden; }
+      .news-related .thumbnail .img-wrapper img {
+        height: 100%;
+        min-width: 100%;
+        left: 50%;
+        position: relative;
+        transform: translateX(-50%); }
+    .news-related .thumbnail .caption {
+      overflow: hidden;
+      text-overflow: ellipsis; }
 
 .heading-font {
   font-family: 'Catamaran', 'Helvetica', 'Arial', 'sans-serif';
