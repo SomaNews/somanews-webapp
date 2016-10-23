@@ -50,7 +50,7 @@ router.get('/:id',
 
                 var related = results.filter((result) => result._id != req.params.id).map((result) => {
                     result.content = result.content.replace(/\n/g, "<br>").substr(0, 20);
-                    return result
+                    return result;
                 });
 
                 var article = {
