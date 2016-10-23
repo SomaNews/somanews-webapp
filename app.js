@@ -1,3 +1,5 @@
+/*jslint node: true */
+
 'use strict';
 
 var express = require('express');
@@ -50,7 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/', users);
 app.use('/articles', articles);
 app.use('/newsStat', newsStat);
 

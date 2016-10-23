@@ -6,7 +6,7 @@ var express = require('express');
 var passport = require('passport');
 var User = require('../models/user');
 
-module.exports = function (router) {
+exports = module.exports = function (router) {
     'use strict';
 
     // Login page
@@ -44,7 +44,7 @@ module.exports = function (router) {
 };
 
 
-module.exports.checkAuth = function (req, res, next) {
+exports.checkAuth = function (req, res, next) {
     'use strict';
     if (req.user) {
         return next();
@@ -61,7 +61,8 @@ module.exports.checkAuth = function (req, res, next) {
                 return next(err);
             }
             return next();
-        });});
+        });
+    });
 
     // return res.redirect('/login');
 };
