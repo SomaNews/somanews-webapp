@@ -39,21 +39,33 @@ router.get('/:id',
     function (req, res, next) {
         'use strict';
 
-        Article.findOne({'_id': req.params.id}, function (err, ret) {
-            if (err) {
-                throw err;
-            }
+        Article.findById(req.params.id, function (err, ret) {
+            if (err) throw err;
 
-            var article = {
-                title: ret.title,
-                author: ret.author,
-                imageURL: ret.imageURL,
-                publishedAt: ret.publishedAt,
-                content: ret.content.replace(/\n/g, "<br>")
-            };
+            Article.find({
+                cluster: ret.cluster
+            },
+            function (err, results) {
+                if (err) throw err;
 
-            // Render article to html
-            res.render('article', {article: article});
+                var related = results.filter((result) => result._id != req.params.id).map((result) => {
+                    result.content = result.content.replace(/\n/g, "<br>").substr(0, 20);
+                    return result
+                });
+
+                var article = {
+                    title: ret.title,
+                    author: ret.author,
+                    imageURL: ret.imageURL,
+                    publishedAt: ret.publishedAt,
+                    content: ret.content.replace(/\n/g, "<br>"),
+                    related: related
+                };
+
+                // Render article to html
+                res.render('article', {article: article});
+                // res.send(article)
+            });
         });
     }
 );
