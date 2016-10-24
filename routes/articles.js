@@ -3,7 +3,7 @@ var router = express.Router();
 var passport = require('passport');
 var mongoose = require('mongoose');
 var Article = mongoose.model('Article');
-
+var Log = require('../models/log');
 var login = require('./login');
 
 // 뉴스 리스트
@@ -36,38 +36,73 @@ router.get('/',
 // 각 뉴스마다
 router.get('/:id',
     login.checkAuth,
-    function (req, res, next) {
+    function (req, res) {
         'use strict';
 
         Article.findById(req.params.id, function (err, ret) {
-            if (err) throw err;
+            if (err) {
+                return res.send(err);
+            }
 
-            Article.find({
-                cluster: ret.cluster
-            },
-            function (err, results) {
-                if (err) throw err;
+            if (!ret) {
+                return res.send(new Error('Unknown news'));
+            }
 
-                var related = results.filter((result) => result._id != req.params.id).map((result) => {
+            var articleID = ret._id;
+
+            var article = {
+                id: articleID,
+                title: ret.title,
+                author: ret.author,
+                imageURL: ret.imageURL,
+                publishedAt: ret.publishedAt,
+                content: ret.content.replace(/\n/g, "<br>"),
+            };
+
+                // 클러스터가 같은 Article들을 related로 해준다
+            Article.find({ cluster: ret.cluster}, function (err, results) {
+                if (err) {
+                    return res.send(err);
+                }
+
+                article.related = results.filter(function (result) {
+                    return result._id !== req.params.id;
+                }).map(function (result) {
                     result.content = result.content.replace(/\n/g, "<br>").substr(0, 20);
                     return result;
                 });
 
-                var article = {
-                    title: ret.title,
-                    author: ret.author,
-                    imageURL: ret.imageURL,
-                    publishedAt: ret.publishedAt,
-                    content: ret.content.replace(/\n/g, "<br>"),
-                    related: related
-                };
+                Log.logArticleEnter(req.user._id, articleID, function (err, viewToken) {
+                    if (err) {
+                        return res.send(err);
+                    }
 
-                // Render article to html
-                res.render('article', {article: article});
-                // res.send(article)
+                    // Render article to html
+                    res.render('article', {article: article, viewToken: viewToken});
+                });
             });
         });
-    }
-);
+    });
+
+
+// 뉴스를 다보고 다음 뉴스로 넘어가거나, 종료할 떄, 뉴스를 다보았다는 로그 수집
+router.post('/articleLeave',
+    function (req, res) {
+        'use strict';
+
+        if (!req.body.viewToken) {
+            console.log('Invalid request : ' + req.body);
+            return res.status(500).send(new Error("Invalid parameters"));
+        }
+
+        Log.logArticleLeave(req.body.viewToken, function (err) {
+            if (err) {
+                console.log(err.messsage);
+                return res.status(500).send(err);
+            }
+            return res.json({success: 1});
+        });
+    });
+
 
 module.exports = router;

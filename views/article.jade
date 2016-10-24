@@ -4,6 +4,8 @@
 extends layout
 
 block content
+    script(type='text/javascript', src='/javascripts/articleLogger.js')
+
 
     // Page Content
     .news-container
@@ -13,6 +15,8 @@ block content
                 // Blog Post
                 // Title
                 .news-body
+                    input(type="hidden", id='articleID', value=article.id)
+                    input(type="hidden", id='viewToken', value=viewToken)
                     h1 #{article.title}
                     // Author
                     p.lead
