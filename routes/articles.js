@@ -4,11 +4,12 @@ var passport = require('passport');
 var Article = require('../models/article');
 var Log = require('../models/log');
 var login = require('./login');
+var utils = require('../utils/utils');
 
 // 뉴스 리스트
 router.get('/',
     login.checkAuth,
-    function (req, res, next) {
+    function (req, res) {
         'use strict';
         // 각 클러스터마다 해당 클러스터에 포함된 뉴스들과 뉴스 갯수를 얻는다.
         Article.listNewestNewsPerCluster(function (err, articles) {
@@ -17,8 +18,7 @@ router.get('/',
             }
             res.render('feed', {articles: articles});
         });
-    }
-);
+    });
 
 
 // 각 뉴스마다
@@ -44,7 +44,7 @@ router.get('/:id',
                 author: ret.author,
                 imageURL: ret.imageURL,
                 publishedAt: ret.publishedAt,
-                content: ret.content.replace(/\n/g, "<br>")
+                content: utils.htmlEscapeMultilineText(ret.content)
             };
 
             // 클러스터가 같은 Article들을 related로 해준다
@@ -54,7 +54,7 @@ router.get('/:id',
                 }
 
                 article.related = results.map(function (result) {
-                    result.content = result.content.replace(/\n/g, "<br>").substr(0, 20);
+                    result.content = utils.htmlEscapeMultilineText(result.content);
                     return result;
                 });
 
