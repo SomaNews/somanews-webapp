@@ -100,7 +100,7 @@ function listen () {
 
 function connect () {
     var options = { server: { socketOptions: { keepAlive: 1 } } };
-    return mongoose.connect('mongodb://ssomanews:ssomanews1029@ds021346.mlab.com:21346/somanews', options).connection;
+    return mongoose.connect('mongodb://ssomanews:ssomanews1029@ds033987-a0.mlab.com:33987/somanews', options).connection;
 }
 
 module.exports = app;
