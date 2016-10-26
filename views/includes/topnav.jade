@@ -21,6 +21,11 @@ nav#mainNav.navbar.navbar-default.navbar-fixed-top
                 li
                     a.page-scroll(href='#contact') Contact
                 li
-                    a.page-scroll(href='/login') Login
-        // navbar-collapse
+                    if(request.user)
+                        a.page-scroll(href='/newsStat') Profile
+                    else
+                        a.page-scroll(href='/login') Login
+
+
+    // navbar-collapse
     // container-fluid
