@@ -10,6 +10,8 @@ var LogSchema = new Schema({
 
 var Log = mongoose.model('Log', LogSchema);
 
+// ---------------------------------------------------------------------------------------------------------------------
+
 /**
  * Log that user has started reading article.
  *

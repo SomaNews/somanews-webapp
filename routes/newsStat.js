@@ -13,7 +13,7 @@ function addDays(date, days) {
 }
 
 // 뉴스 리스트
-router.get('/:year/:mon/:date', function (req, res, next) {
+router.get('/:year/:mon/:date', function (req, res) {
     'use strict';
 
     var queryDate = new Date();
@@ -41,7 +41,7 @@ router.get('/:year/:mon/:date', function (req, res, next) {
 // by graph
 router.get('/', function (req, res) {
     'use strict';
-    var minimumDate = addDays(new Date(), -50);
+    var minimumDate = addDays(new Date(), -100);
     Article.aggregate([
         { $match: { publishedAt: { $gte: minimumDate} } },
         { $project: { ymd: { $dateToString: { format: "%Y-%m-%d", date: "$publishedAt" } } } },
