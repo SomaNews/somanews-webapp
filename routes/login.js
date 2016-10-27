@@ -10,14 +10,22 @@ exports = module.exports = function (router) {
     'use strict';
 
     // Login page
-    router.get('/login', function (req, res) {
-        res.render('login');
+    router.post('/login', function (req, res, next) {
+        passport.authenticate('local', function(err, user, info) {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                return res.json({error: '로그인에 실패했습니다. ' + info});
+            }
+            req.logIn(user, function(err) {
+                if (err) {
+                    return next(err);
+                }
+                return res.json({error: 0});
+            });
+        })(req, res, next);
     });
-
-    router.post('/login', passport.authenticate('local', {
-        successRedirect: '/articles',
-        failureRedirect: '/login'
-    }));
 
 
     // Join page
@@ -50,19 +58,6 @@ exports.checkAuth = function (req, res, next) {
         return next();
     }
 
-    /// TODO : Edit test code
-    /// Login with test@test.com
-    User.findUserByEmail('test@test.com', function (err, user) {
-        if (err) {
-            return next(err);
-        }
-        req.login(user, function (err) {
-            if (err) {
-                return next(err);
-            }
-            return next();
-        });
-    });
-
-    // return res.redirect('/login');
+    // Render login page instead
+    return res.render('login');
 };

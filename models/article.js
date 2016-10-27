@@ -19,6 +19,7 @@ var ArticleSchema = new Schema({
 var Article = mongoose.model('Article', ArticleSchema);
 
 
+
 /**
  * Find most recent news per clustre
  * @param callback - callback(err, articles)
@@ -40,6 +41,7 @@ exports.listNewestNewsPerCluster = function (callback) {
     ], callback);
 };
 
+
 /**
  * Get article from article id
  * @param id - Article ID
@@ -47,7 +49,6 @@ exports.listNewestNewsPerCluster = function (callback) {
  */
 exports.getArticle = function (id, callback) {
     'use strict';
-
     Article.findById(id, callback);
 };
 
