@@ -43,7 +43,7 @@ exports = module.exports = function (router) {
 
         User.createUser(email, password, function (err, accepted) {
             if (accepted) {
-                res.redirect('/login');
+                res.redirect('/articles');
             } else {
                 res.redirect('/join');
             }
