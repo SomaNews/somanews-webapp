@@ -53,7 +53,7 @@ exports.getArticle = function (id, callback) {
 
 
 /**
- * Find up to 10 articles related to specific article
+ * Find up to 9 articles related to specific article
  * @param seedArticle - Article to search from
  * @param callback - callback (err, articles)
  */
@@ -62,5 +62,5 @@ exports.findRelatedArticles = function (seedArticle, callback) {
     Article.find({
         _id: {$ne: seedArticle._id},
         cluster: seedArticle.cluster
-    }, callback).limit(10);
+    }, callback).limit(9);
 };
