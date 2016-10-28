@@ -51,6 +51,12 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
 
+// Add req to jade local variable
+app.use(function (req, res, next) {
+    res.locals.request = req;
+    next();
+});
+
 app.use('/', routes);
 app.use('/', users);
 app.use('/articles', articles);
