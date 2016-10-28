@@ -3,7 +3,6 @@ var router = express.Router();
 
 var mongoose = require('mongoose');
 var Article = mongoose.model('Article');
-var dateUtils = require('../utils/dateUtils');
 var login = require('./login');
 
 /* GET users listing. */

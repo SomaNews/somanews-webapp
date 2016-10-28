@@ -1,36 +1,24 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var mongoose = require('mongoose');
-var Article = mongoose.model('Article');
+var Article = require('../models/article');
 var Log = require('../models/log');
 var login = require('./login');
+var utils = require('../utils/utils');
 
 // 뉴스 리스트
 router.get('/',
     login.checkAuth,
-    function (req, res, next) {
+    function (req, res) {
         'use strict';
         // 각 클러스터마다 해당 클러스터에 포함된 뉴스들과 뉴스 갯수를 얻는다.
-        Article.aggregate([
-            { $sort : { "publishedAt": -1 } },
-            { $group : {
-                '_id': "$cluster",
-                count: {$sum: 1},
-                clusters: {$push: "$$ROOT"}
-            }},
-            { $project : {
-                count: 1,
-                clusters: { $slice: ["$clusters", 0, 1] }
-            } }
-        ], function (err, articles) {
+        Article.listNewestNewsPerCluster(function (err, articles) {
             if (err) {
                 return res.send(err);
             }
             res.render('feed', {articles: articles});
         });
-    }
-);
+    });
 
 
 // 각 뉴스마다
@@ -39,7 +27,7 @@ router.get('/:id',
     function (req, res) {
         'use strict';
 
-        Article.findById(req.params.id, function (err, ret) {
+        Article.getArticle(req.params.id, function (err, ret) {
             if (err) {
                 return res.send(err);
             }
@@ -56,19 +44,17 @@ router.get('/:id',
                 author: ret.author,
                 imageURL: ret.imageURL,
                 publishedAt: ret.publishedAt,
-                content: ret.content.replace(/\n/g, "<br>"),
+                content: utils.htmlEscapeMultilineText(ret.content)
             };
 
-                // 클러스터가 같은 Article들을 related로 해준다
-            Article.find({ cluster: ret.cluster}, function (err, results) {
+            // 클러스터가 같은 Article들을 related로 해준다
+            Article.findRelatedArticles(ret, function (err, results) {
                 if (err) {
                     return res.send(err);
                 }
 
-                article.related = results.filter(function (result) {
-                    return result._id !== req.params.id;
-                }).map(function (result) {
-                    result.content = result.content.replace(/\n/g, "<br>").substr(0, 20);
+                article.related = results.map(function (result) {
+                    result.content = utils.htmlEscapeMultilineText(result.content);
                     return result;
                 });
 
