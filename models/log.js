@@ -64,3 +64,35 @@ exports.logArticleLeave = function (viewToken, callback) {
         });
     });
 };
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+exports.getUserLog = function (userID, start, count, callback) {
+    "use strict";
+
+    if (count < 0) {
+        return callback(new Error('Negative count'));
+    }
+
+    // Skip if app requests too much arguments.
+    if (count >= 100) {
+        count = 100;
+    }
+
+    Log.aggregate([
+        { $sort: { startedAt: -1 } },
+        { $skip: start }, { $limit: count },
+        { $lookup: {
+            from: 'articles',
+            localField: 'article',
+            foreignField: '_id',
+            as: 'article'
+        }},
+        { $unwind: '$article' }
+    ], function (err, ret) {
+        if (err) {
+            return callback(err);
+        }
+        return callback(null, ret);
+    });
+};
