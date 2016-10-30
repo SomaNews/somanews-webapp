@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var ArticleSchema = new Schema({
+    _id: {type: String, default: null},
     title: {type: String, default: ''},
     author: {type: String, default: ''},
     link: {type: String, default: ''},
@@ -49,7 +50,9 @@ exports.listNewestNewsPerCluster = function (callback) {
  */
 exports.getArticle = function (id, callback) {
     'use strict';
-    Article.findById(id, callback);
+    Article.findOne({_id: id}, function (err, ret) {
+        return callback(err, ret);
+    });
 };
 
 

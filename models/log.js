@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var LogSchema = new Schema({
     user: {type: Schema.ObjectId, ref: 'User'},
-    article: {type: Schema.ObjectId, ref: 'Article'},
+    article: {type: String},
     startedAt: {type: Date, default: Date.now},
     endedAt: {type: Date, default: null}
 });

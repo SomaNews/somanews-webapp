@@ -51,7 +51,7 @@ block content
                 each article in articles
                     li.col-md-3.col-sm-6.feed-body
                         .thumbnail
-                            a(href='/articles/#{article.clusters[0]._id}')
+                            a(href='/articles/#{encodeArticleId(article.clusters[0]._id)}')
                                 .img-wrapper
                                     if(article.clusters[0].imageURL)
                                         img(src='#{article.clusters[0].imageURL}', alt='')
