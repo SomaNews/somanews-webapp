@@ -4,6 +4,7 @@
 
 var express = require('express');
 var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -44,7 +45,12 @@ app.use(require('node-sass-middleware')({
     indentedSyntax: true,
     sourceMap: true
 }));
-app.use(session({ secret: 'asjkdfhsdjkghiuerhv' }));
+
+app.use(session({ store: new RedisStore({
+    host: '127.0.0.1',
+    port: 6379
+}), secret: 'asjkdfhsdjkghiuerhv' }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
