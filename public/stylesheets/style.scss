@@ -4,6 +4,7 @@
 @import "./includes/feed";
 @import "./includes/login";
 @import "./includes/article";
+@import "./includes/profile";
 
 .heading-font {
     font-family: 'Catamaran', 'Helvetica', 'Arial', 'sans-serif';
@@ -413,5 +414,8 @@ img {
 
 body {
     webkit-tap-highlight-color: #222222;
-    padding-top: 50px;
+}
+
+body > .container {
+    padding-top: 70px;
 }

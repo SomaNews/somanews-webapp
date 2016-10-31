@@ -6,16 +6,6 @@ var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
 
-function encodeArticleId(id) {
-    "use strict";
-    return id.replace(/\//g, '$');
-}
-
-function decodeArticleId(id) {
-    "use strict";
-    return id.replace(/\$/g, '/');
-}
-
 // 뉴스 리스트
 router.get('/',
     login.checkAuth,
@@ -26,7 +16,7 @@ router.get('/',
             if (err) {
                 return res.send(err);
             }
-            res.render('feed', {articles: articles, encodeArticleId: encodeArticleId});
+            res.render('feed', {articles: articles, encodeArticleId: utils.encodeArticleId});
         });
     });
 
@@ -38,7 +28,7 @@ router.get('/:id',
     function (req, res) {
         'use strict';
 
-        var articleID = decodeArticleId(req.params.id);
+        var articleID = utils.decodeArticleId(req.params.id);
 
         Article.getArticle(articleID, function (err, ret) {
             if (err) {
