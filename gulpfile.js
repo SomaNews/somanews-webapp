@@ -5,14 +5,6 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var sass = require('gulp-sass');
 var nodemon = require('gulp-nodemon');
-var babel = require('gulp-babel');
-
-// Babel Settings
-gulp.task('babel', function() {
-    return gulp.src('src/**/*.js')
-        .pipe(babel())
-        .pipe(gulp.dest('out'));
-});
 
 // Lint Task
 gulp.task('lint', function () {
@@ -23,14 +15,14 @@ gulp.task('lint', function () {
 
 // Compile Our Sass
 gulp.task('sass', function () {
-    return gulp.src('scss/*.scss')
-        .pipe(sass())
-        .pipe(gulp.dest('public/stylesheets'));
+    return gulp.src('public/stylesheets/style.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest('public/stylesheets/'));
 });
 
 // Watch Files For Changes
 gulp.task('watch', function () {
-    gulp.watch('scss/**/*.scss', ['sass']);
+    return gulp.watch('public/**/*.scss', ['sass']);
 });
 
 // Nodemon
