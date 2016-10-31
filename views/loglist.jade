@@ -4,11 +4,16 @@
 extends layout
 
 block content
-
-        .profile-content
-            table.profile-table
-                each log in logs
+    .container
+        .row
+            table.table.table-bordered.table-striped.table-condensed
+                thead
                     tr
-                        td= log.startedAt
-                        td
-                            a(href=log.newsURL)=log.article.title
+                        th= '시간'
+                        th= '제목'
+                tbody
+                    each log in logs
+                        tr
+                            td= log.startedAt
+                            td
+                                a(href=log.article.url)=log.article.title
