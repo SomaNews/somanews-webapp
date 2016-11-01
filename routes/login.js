@@ -16,7 +16,7 @@ exports = module.exports = function (router) {
                 return next(err);
             }
             if (!user) {
-                return res.json({error: '로그인에 실패했습니다. ' + info});
+                return res.json({error: '로그인에 실패했습니다. '});
             }
             req.logIn(user, function(err) {
                 if (err) {
