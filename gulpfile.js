@@ -40,10 +40,11 @@ var BROWSER_SYNC_RELOAD_DELAY = 2000;
 gulp.task('nodemon', function (cb) {
     // Serve files from the root of this project
 
-    browserSync.init(null, {
+    browserSync.init({
         proxy: "http://localhost:3000",
         files: ["views/**/*.*, public/**/*.*"],
-        port: 7000
+        port: 7000,
+        notify: false,
     });
 
     var started = false;
@@ -59,7 +60,7 @@ gulp.task('nodemon', function (cb) {
             // reload connected browsers after a slight delay
             setTimeout(function reload() {
                 browserSync.reload({
-                    stream: false
+                    stream: false,
                 });
             }, BROWSER_SYNC_RELOAD_DELAY);
         });
