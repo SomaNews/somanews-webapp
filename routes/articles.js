@@ -16,7 +16,7 @@ router.get('/',
             if (err) {
                 return res.send(err);
             }
-            res.render('feed', {articles: articles, encodeArticleId: utils.encodeArticleId});
+            res.render('feed', {articles: articles});
         });
     });
 
@@ -28,7 +28,7 @@ router.get('/:id',
     function (req, res) {
         'use strict';
 
-        var articleID = utils.decodeArticleId(req.params.id);
+        var articleID = req.params.id;
 
         Article.getArticle(articleID, function (err, ret) {
             if (err) {

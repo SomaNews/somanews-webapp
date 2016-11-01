@@ -49,7 +49,7 @@ block content
                     .row.text-center
                         each related in article.related
                             li.col-md-4.col-sm-6.hero-feature
-                                a(href='/articles/#{related._id}')
+                                a(href='/articles/#{encodeURIComponent(related._id)}')
                                     .thumbnail
                                         .img-wrapper
                                             if(related.imageURL)

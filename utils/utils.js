@@ -64,23 +64,3 @@ exports.formatDate = function (date) {
         date.getMinutes()
     );
 };
-
-/**
- * Article ID를 url에 넣을 수 있도록 변형한다
- * @param id - article ID
- * @returns {string} - 변환된 아이디
- */
-exports.encodeArticleId = function (id) {
-    "use strict";
-    return id.replace(/\//g, '$');
-};
-
-/**
- * 변환된 Article ID를 원상복구한다
- * @param id - 변환된 ID
- * @returns {string} - 원래 ID
- */
-exports.decodeArticleId = function (id) {
-    "use strict";
-    return id.replace(/\$/g, '/');
-};

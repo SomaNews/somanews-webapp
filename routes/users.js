@@ -19,7 +19,8 @@ router.get('/:id/feed', function (req, res) {
     res.render('feed');
 });
 
-router.get('/profile', (req, res) => {
+router.get('/profile',
+    login.checkAuth, (req, res) => {
     "use strict";
 
     Log.getUserLog(req.user._id, 0, 10, function (err, logs) {
@@ -32,7 +33,7 @@ router.get('/profile', (req, res) => {
                 startedAt: utils.formatDate(entry.startedAt),
                 article: {
                     title: entry.article.title,
-                    url: '/articles/' + utils.encodeArticleId(entry.article._id)
+                    url: '/articles/' + encodeURIComponent(entry.article._id)
                 }
             }
         });
