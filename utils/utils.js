@@ -1,3 +1,5 @@
+var sprintf = require("sprintf-js").sprintf;
+
 /**
  * 어제에 해당하는 Date를 리턴한다
  * @returns {Date}
@@ -45,4 +47,20 @@ exports.htmlEscapeMultilineText = function (text) {
         return '';
     });
     return paragraphs.join('');
+};
+
+
+/**
+ * Date를 스트링으로 변환한다
+ * @param date - 변환할 Date
+ * @returns {String} - 변환한 String
+ */
+exports.formatDate = function (date) {
+    return sprintf("%04d/%02d/%02d %02d:%02d",
+        date.getFullYear(),
+        date.getMonth() + 1,
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes()
+    );
 };

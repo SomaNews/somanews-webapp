@@ -21,13 +21,16 @@ router.get('/',
     });
 
 
+
 // 각 뉴스마다
 router.get('/:id',
     login.checkAuth,
     function (req, res) {
         'use strict';
 
-        Article.getArticle(req.params.id, function (err, ret) {
+        var articleID = req.params.id;
+
+        Article.getArticle(articleID, function (err, ret) {
             if (err) {
                 return res.send(err);
             }
@@ -35,8 +38,6 @@ router.get('/:id',
             if (!ret) {
                 return res.send(new Error('Unknown news'));
             }
-
-            var articleID = ret._id;
 
             var article = {
                 id: articleID,

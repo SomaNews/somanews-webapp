@@ -1,0 +1,19 @@
+//
+   Created by phu54 on 2016-10-30.
+
+extends layout
+
+block content
+    .container
+        .row
+            table.table.table-bordered.table-striped.table-condensed
+                thead
+                    tr
+                        th= '시간'
+                        th= '제목'
+                tbody
+                    each log in logs
+                        tr
+                            td= log.startedAt
+                            td
+                                a(href=log.article.url)=log.article.title
