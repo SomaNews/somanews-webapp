@@ -52,10 +52,7 @@ block content
                         .thumbnail
                             a(href='/articles/#{encodeURIComponent(article.clusters[0]._id)}')
                                 .img-wrapper
-                                    if(article.clusters[0].imageURL)
-                                        img(src='#{article.clusters[0].imageURL}', alt='')
-                                    else
-                                        img(src='http://placehold.it/800x500', alt='')
+                                    img(src='#{article.clusters[0].imageURL}', alt='')
                                 .caption
                                     h3 #{article.clusters[0].title}
                                     p #{article.clusters[0].description.substring(0, 50)}

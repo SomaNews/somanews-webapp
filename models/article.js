@@ -30,6 +30,7 @@ exports.listNewestNewsPerCluster = function (callback) {
 
     Article.aggregate([
         { $sort : { "publishedAt": -1 } },
+        { $match : { "imageURL": {$ne: ""} } },
         { $group : {
             '_id': "$cluster",
             count: {$sum: 1},
