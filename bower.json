@@ -20,6 +20,7 @@
     "jquery": "^3.1.0",
     "font-awesome": "fontawesome#^4.6.3",
     "bourbon": "^4.2.7",
-    "simple-line-icons": "^2.3.2"
+    "simple-line-icons": "^2.3.2",
+    "d3": "^4.3.0"
   }
 }
