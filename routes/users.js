@@ -35,7 +35,7 @@ router.get('/profile',
                     title: entry.article.title,
                     url: '/articles/' + encodeURIComponent(entry.article._id)
                 }
-            }
+            };
         });
         res.render('loglist', {logs: logs});
     });

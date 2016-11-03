@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var Article = require('../models/article');
+var Article2 = require('../models/article2');
 var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
@@ -9,18 +10,27 @@ var utils = require('../utils/utils');
 // 뉴스 리스트
 router.get('/',
     login.checkAuth,
+
     function (req, res) {
         'use strict';
+
         // 각 클러스터마다 해당 클러스터에 포함된 뉴스들과 뉴스 갯수를 얻는다.
-        Article.listNewestNewsPerCluster(function (err, articles) {
-            if (err) {
-                return res.send(err);
-            }
-            res.render('feed', {articles: articles});
-        });
+        if (req.originalUrl=='/articles2') {
+            Article2.listNewestNewsPerCluster(function (err, articles) {
+                if (err) {
+                    return res.send(err);
+                }
+                res.render('feed', {articles: articles});
+            });
+        } else {
+            Article.listNewestNewsPerCluster(function (err, articles) {
+                if (err) {
+                    return res.send(err);
+                }
+                res.render('feed', {articles: articles});
+            });
+        }
     });
-
-
 
 // 각 뉴스마다
 router.get('/:id',
