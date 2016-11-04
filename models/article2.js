@@ -13,8 +13,7 @@ var ArticleSchema = new Schema({
     category: {type: String, default: ''},
     description: {type: String, default: ''},
     publishedAt: {type: Date, default: null},
-    cluster: {type: Number, default: ''},
-    vector: {type: Array, default: null}
+    cluster: {type: Number, default: ''}
 });
 
 var Article2 = mongoose.model('Article2', ArticleSchema);
@@ -22,7 +21,7 @@ var Article2 = mongoose.model('Article2', ArticleSchema);
 
 
 /**
- * Find most recent news per clustre
+ * Find most recent news per cluster
  * @param callback - callback(err, articles)
  */
 exports.listNewestNewsPerCluster = function (callback) {
