@@ -47,18 +47,33 @@ block content
         // Page Features
         .row.text-center
             ul.list-unstyled
-                each article in articles
-                    li.col-md-3.col-sm-6.feed-body
-                        .thumbnail
-                            a(href='/articles/#{encodeURIComponent(article.clusters[0]._id)}')
-                                .img-wrapper
-                                    img(src='#{article.clusters[0].imageURL}', alt='')
-                                .caption
-                                    h3 #{article.clusters[0].title}
-                                    p #{article.clusters[0].description.substring(0, 50)}
-                                .count
-                                    hr
-                                    p 관련기사 #{article.count}건
+                if isCluster
+                    each cluster in clusters
+                        li.col-md-3.col-sm-6.feed-body
+                            .thumbnail
+                                a(href='/articles2/#{encodeURIComponent(cluster.leading._id)}?cluster=#{cluster.cluster}')
+                                    .img-wrapper
+                                        img(src='#{cluster.leading.imageURL}', alt='')
+                                    .caption
+                                        h3 #{cluster.leading.title}
+                                        p #{cluster.leading.description.substring(0, 50)}
+                                    .count
+                                        hr
+                                        p 관련기사 #{cluster.count}건
+                else
+                    each article in articles
+                        li.col-md-3.col-sm-6.feed-body
+                            .thumbnail
+                                a(href='/articles/#{encodeURIComponent(article.clusters[0]._id)}')
+                                    .img-wrapper
+                                        img(src='#{article.clusters[0].imageURL}', alt='')
+                                    .caption
+                                        h3 #{article.clusters[0].title}
+                                        p #{article.clusters[0].description.substring(0, 50)}
+                                    .count
+                                        hr
+                                        p 관련기사 #{article.count}건
+
 
         // /.row
         hr
