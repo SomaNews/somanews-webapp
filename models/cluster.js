@@ -22,7 +22,7 @@ var Cluster = mongoose.model('Cluster', ClusterSchema);
 exports.listNewestNewsPerCluster = function (callback) {
     'use strict';
 
-    Cluster.find().sort({ "cohesion": 'desc' }).limit(12).exec(callback);
+    Cluster.find().sort({ "clusteredAt": 'desc', "cohesion": 'desc' }).limit(12).exec(callback);
 };
 
 /**
