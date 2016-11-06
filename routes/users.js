@@ -23,7 +23,7 @@ router.get('/profile',
     login.checkAuth, (req, res) => {
     "use strict";
 
-    Log.getUserLog(req.user._id, 0, 10, function (err, logs) {
+    Log.getUserLog(req.user._id, 0, 100, function (err, logs) {
         if (err) {
             return res.send(err);
         }
