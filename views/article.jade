@@ -49,16 +49,29 @@ block content
                     .row.text-center
                         each related in article.related
                             li.col-md-4.col-sm-6.hero-feature
-                                a(href='/articles/#{encodeURIComponent(related._id)}')
-                                    .thumbnail
-                                        .img-wrapper
-                                            if(related.imageURL)
-                                                img.img-responsive(src='#{related.imageURL}', alt='')
-                                            else
-                                                img.img-responsive(src='http://placehold.it/800x500', alt='')
-                                        .caption
-                                            h3 #{related.title}
-                                            p.lead!= related.content
+                                if isCluster
+                                    a(href='/articles2/#{encodeURIComponent(related._id)}?cluster=#{article.cluster}')
+                                        .thumbnail
+                                            .img-wrapper
+                                                if(related.imageURL)
+                                                    img.img-responsive(src='#{related.imageURL}', alt='')
+                                                else
+                                                    img.img-responsive(src='http://placehold.it/800x500', alt='')
+                                            .caption
+                                                h3 #{related.title}
+                                                p.lead!= related.content
+
+                                else
+                                    a(href='/articles/#{encodeURIComponent(related._id)}')
+                                        .thumbnail
+                                            .img-wrapper
+                                                if(related.imageURL)
+                                                    img.img-responsive(src='#{related.imageURL}', alt='')
+                                                else
+                                                    img.img-responsive(src='http://placehold.it/800x500', alt='')
+                                            .caption
+                                                h3 #{related.title}
+                                                p.lead!= related.content
             // /.row
         // Blog Sidebar Widgets Column
         .col-md-4

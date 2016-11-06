@@ -13,8 +13,7 @@ var ArticleSchema = new Schema({
     category: {type: String, default: ''},
     description: {type: String, default: ''},
     publishedAt: {type: Date, default: null},
-    cluster: {type: Number, default: ''},
-    vector: {type: Array, default: null}
+    cluster: {type: Number, default: ''}
 });
 
 var Article = mongoose.model('Article', ArticleSchema);
@@ -22,7 +21,7 @@ var Article = mongoose.model('Article', ArticleSchema);
 
 
 /**
- * Find most recent news per clustre
+ * Find most recent news per cluster
  * @param callback - callback(err, articles)
  */
 exports.listNewestNewsPerCluster = function (callback) {
@@ -30,6 +29,7 @@ exports.listNewestNewsPerCluster = function (callback) {
 
     Article.aggregate([
         { $sort : { "publishedAt": -1 } },
+        { $match : { "imageURL": {$ne: ""} } },
         { $group : {
             '_id': "$cluster",
             count: {$sum: 1},

@@ -23,6 +23,7 @@ fs.readdirSync(models)
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var articles = require('./routes/articles');
+var articles2 = require('./routes/articles');
 var newsStat = require('./routes/newsStat');
 var login = require('./routes/login');
 
@@ -66,6 +67,7 @@ app.use(function (req, res, next) {
 app.use('/', routes);
 app.use('/', users);
 app.use('/articles', articles);
+app.use('/articles2', articles2);
 app.use('/newsStat', newsStat);
 
 // catch 404 and forward to error handler
@@ -112,7 +114,7 @@ function listen () {
 
 function connect () {
     var options = { server: { socketOptions: { keepAlive: 1 } } };
-    return mongoose.connect('mongodb://ssomanews:ssomanews1029@ds033987-a0.mlab.com:33987/somanews', options).connection;
+    return mongoose.connect('mongodb://ssomanews:ssomanews1029@104.199.210.143:27017/somanews', options).connection;
 }
 
 module.exports = app;
