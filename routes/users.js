@@ -28,8 +28,10 @@ router.get('/profile',
             return res.send(err);
         }
 
+        // Get required categories
         logs = logs.map(function (entry) {
             return {
+                cate: entry.article.cate,
                 startedAt: utils.formatDate(entry.startedAt),
                 article: {
                     title: entry.article.title,
@@ -37,7 +39,19 @@ router.get('/profile',
                 }
             };
         });
-        res.render('loglist', {logs: logs});
+
+        // Make graph
+        var categoryCounts = {};
+        logs.forEach(function (entry) {
+            var category = entry.cate;
+            categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+        });
+        var categoryFrequencyData = utils.makeFrequencyGraphData(categoryCounts);
+
+        res.render('loglist', {
+            logs: logs,
+            logdataGraph: categoryFrequencyData
+        });
     });
 });
 

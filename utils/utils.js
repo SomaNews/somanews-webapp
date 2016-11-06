@@ -56,6 +56,7 @@ exports.htmlEscapeMultilineText = function (text) {
  * @returns {String} - 변환한 String
  */
 exports.formatDate = function (date) {
+    "use strict";
     return sprintf("%04d/%02d/%02d %02d:%02d",
         date.getFullYear(),
         date.getMonth() + 1,
@@ -63,4 +64,26 @@ exports.formatDate = function (date) {
         date.getHours(),
         date.getMinutes()
     );
+};
+
+
+/**
+ * Make frequency count ( object -> int ) to chartist.js friendly format.
+ * @param frequencies - Dictionary of frequencies.
+ * @returns {{labels: Array, items: Array}}
+ */
+exports.makeFrequencyGraphData = function (frequencies) {
+    "use strict";
+    var keys = Object.keys(frequencies);
+    var l = [];
+    for(var i = 0 ; i < keys.length ; i++) {
+        l[l.length] = [frequencies[keys[i]], keys[i]];
+    }
+    l.sort();
+    var items = l.map((e) => e[0]);
+    var labels = l.map((e) => e[1]);
+    return {
+        labels: labels,
+        series: items
+    };
 };
