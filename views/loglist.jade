@@ -10,11 +10,8 @@ block content
             .col-xs-6.col-xs-offset-3
                 .ct-chart.ct-perfect-fourth
                     script.
-                        new Chartist.Pie('.ct-chart', !{JSON.stringify(logdataGraph)}, {
-                            labelInterpolationFnc: function (v) {
-                                return v;
-                            }
-                        });
+                        graphFrequencies(!{JSON.stringify(logdataGraph)})
+
         // 로그 리스트
         .row
             table.table.table-bordered.table-striped.table-condensed
@@ -22,9 +19,11 @@ block content
                     tr
                         th= '시간'
                         th= '제목'
+                        th= '카테고리'
                 tbody
                     each log in logs
                         tr
                             td= log.startedAt
                             td
                                 a(href=log.article.url)=log.article.title
+                            td= log.cate
