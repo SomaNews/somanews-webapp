@@ -27,6 +27,14 @@ exports = module.exports = function (router) {
         })(req, res, next);
     });
 
+    router.get('/logout', function (req, res) {
+        if (!req.user) {  // Not logged in -> FAiled
+            return res.send(new Error('Not logon'));
+        }
+        req.logout();
+        return res.redirect('/articles');
+    });
+
 
     // Join page
     router.get('/join', function (req, res) {

@@ -11,22 +11,25 @@
 
     .thumbnail {
         position: relative;
-        height: 40vh;
+        height: auto;
         overflow: hidden;
 
-        .img-wrapper {
-            width: 100%;
-            height: 18vh;
-            overflow:hidden;
+        .ratio-4to3 {
+            position:relative;
+            width:100%;
+            padding-bottom:75%;
 
-            img {
+            .img-wrapper {
+                position: absolute;
+                background-position: center;
+                background-size: cover;
+
+                width: 100%;
                 height: 100%;
-                min-width: 100%;
-                left: 50%;
-                position: relative;
-                transform: translateX(-50%);
+                overflow:hidden;
             }
         }
+
         .caption {
             overflow: hidden;
             text-overflow: ellipsis;

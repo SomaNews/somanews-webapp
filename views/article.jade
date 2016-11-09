@@ -16,12 +16,12 @@ block content
             .news-body
                 input(type="hidden", id='articleID', value=article.id)
                 input(type="hidden", id='viewToken', value=viewToken)
+
                 h1 #{article.title}
                 // Author
                 p.lead
                     | by&nbsp;
                     a(href='#') #{article.author}
-                hr
                 // Date/Time
                 p
                     span.glyphicon.glyphicon-time
@@ -30,9 +30,7 @@ block content
                 // Preview Image
                 if(article.imageURL)
                     img.img-responsive(src='#{article.imageURL}', alt='')
-                else
-                    img.img-responsive(src='http://placehold.it/800x500', alt='')
-                hr
+                    hr
                 // Post Content
                 p.lead!= article.content
 
@@ -52,26 +50,24 @@ block content
                                 if isCluster
                                     a(href='/articles2/#{encodeURIComponent(related._id)}?cluster=#{article.cluster}')
                                         .thumbnail
-                                            .img-wrapper
+                                            .ratio-4to3
                                                 if(related.imageURL)
-                                                    img.img-responsive(src='#{related.imageURL}', alt='')
+                                                    .img-wrapper(style='background-image: url(#{related.imageURL});')
                                                 else
-                                                    img.img-responsive(src='http://placehold.it/800x500', alt='')
+                                                    .img-wrapper(style='background-image: url(http://placehold.it/800x500);')
                                             .caption
-                                                h3 #{related.title}
-                                                p.lead!= related.content
+                                                p #{related.title}
 
                                 else
                                     a(href='/articles/#{encodeURIComponent(related._id)}')
                                         .thumbnail
-                                            .img-wrapper
+                                            .ratio-4to3
                                                 if(related.imageURL)
-                                                    img.img-responsive(src='#{related.imageURL}', alt='')
+                                                    .img-wrapper(style='background-image: url(#{related.imageURL});')
                                                 else
-                                                    img.img-responsive(src='http://placehold.it/800x500', alt='')
+                                                    .img-wrapper(style='background-image: url(http://placehold.it/800x500);')
                                             .caption
-                                                h3 #{related.title}
-                                                p.lead!= related.content
+                                                p #{related.title}
             // /.row
         // Blog Sidebar Widgets Column
         .col-md-4
