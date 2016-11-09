@@ -23,7 +23,7 @@ fs.readdirSync(models)
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var articles = require('./routes/articles');
-var articles2 = require('./routes/articles');
+var clusters = require('./routes/clusters');
 var newsStat = require('./routes/newsStat');
 var login = require('./routes/login');
 
@@ -67,7 +67,7 @@ app.use(function (req, res, next) {
 app.use('/', routes);
 app.use('/', users);
 app.use('/articles', articles);
-app.use('/articles2', articles2);
+app.use('/clusters', clusters);
 app.use('/newsStat', newsStat);
 
 // catch 404 and forward to error handler
