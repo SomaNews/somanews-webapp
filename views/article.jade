@@ -47,27 +47,16 @@ block content
                     .row.text-center
                         each related in article.related
                             li.col-md-4.col-sm-6.hero-feature
-                                if isCluster
-                                    a(href='/articles2/#{encodeURIComponent(related._id)}?cluster=#{article.cluster}')
-                                        .thumbnail
-                                            .ratio-4to3
-                                                if(related.imageURL)
-                                                    .img-wrapper(style='background-image: url(#{related.imageURL});')
-                                                else
-                                                    .img-wrapper(style='background-image: url(http://placehold.it/800x500);')
-                                            .caption
-                                                p #{related.title}
+                                a(href='#{encodeURIComponent(related._id)}')
+                                    .thumbnail
+                                        .ratio-4to3
+                                            if(related.imageURL)
+                                                .img-wrapper(style='background-image: url(#{related.imageURL});')
+                                            else
+                                                .img-wrapper(style='background-image: url(http://placehold.it/800x500);')
+                                        .caption
+                                            p #{related.title}
 
-                                else
-                                    a(href='/articles/#{encodeURIComponent(related._id)}')
-                                        .thumbnail
-                                            .ratio-4to3
-                                                if(related.imageURL)
-                                                    .img-wrapper(style='background-image: url(#{related.imageURL});')
-                                                else
-                                                    .img-wrapper(style='background-image: url(http://placehold.it/800x500);')
-                                            .caption
-                                                p #{related.title}
             // /.row
         // Blog Sidebar Widgets Column
         .col-md-4

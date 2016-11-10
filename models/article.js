@@ -39,7 +39,20 @@ exports.listNewestNewsPerCluster = function (callback) {
             count: 1,
             clusters: { $slice: ["$clusters", 0, 1] }
         } }
-    ], callback);
+    ], function (err, groups) {
+        if (err) {
+            return callback(err, null);
+        }
+
+        var clusters = [];
+        for(var i = 0 ; i < groups.length ; i++) {
+            var group = groups[i];
+            clusters[i] = {
+                leading: group.clusters[0]
+            };
+        }
+        return callback(null, clusters);
+    });
 };
 
 

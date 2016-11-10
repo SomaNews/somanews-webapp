@@ -50,7 +50,7 @@ block content
                 each cluster in clusters
                     li.col-md-3.col-sm-6.feed-body
                         .thumbnail
-                            a(href='/articles2/#{encodeURIComponent(cluster.leading._id)}?cluster=#{cluster.cluster}')
+                            a(href='#{encodeURIComponent(cluster.leading._id)}')
                                 .img-wrapper
                                     img(src='#{cluster.leading.imageURL}', alt='')
                                 .caption

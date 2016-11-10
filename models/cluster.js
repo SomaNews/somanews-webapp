@@ -14,6 +14,17 @@ var ClusterSchema = new Schema({
 var Cluster = mongoose.model('Cluster', ClusterSchema);
 
 
+/**
+ * Get most recent cluster containing article
+ * @param articleID - Article ID
+ * @param callback - callback(err, cluster)
+ */
+exports.findClusterContainingArticle = function (articleID, callback) {
+    Cluster.findOne({
+        $query: {"articles._id": articleID},
+        $orderBy: {'clusteredAt': -1}
+    }, callback);
+};
 
 /**
  * Find most recent news per cluster
@@ -27,6 +38,7 @@ exports.listNewestNewsPerCluster = function (callback) {
 
 /**
  * Find cluster
+ * @param cluster - 클러스터의 ID
  * @param callback - callback(err, articles)
  */
 exports.findCluster = function (cluster, callback) {

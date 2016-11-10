@@ -6,8 +6,10 @@ var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
 
+router.get('/', (req, res) => { res.redirect('clusters/feed');});
+
 // 뉴스 리스트
-router.get('/',
+router.get('/feed',
     login.checkAuth,
 
     function (req, res) {
@@ -18,7 +20,7 @@ router.get('/',
             if (err) {
                 return res.send(err);
             }
-            res.render('feedCluster', {clusters: clusters, isCluster: false});
+            res.render('feed', {clusters: clusters});
         });
     });
 
@@ -30,13 +32,22 @@ router.get('/:id',
 
         var articleID = req.params.id;
 
-        Cluster.findCluster(req.query.cluster ,function (err, cluster) {
+        Cluster.findClusterContainingArticle(articleID, function (err, cluster) {
             if (err) {
-                res.send(err);
+                return res.send(err);
             }
 
-            var rawArticle = cluster.articles.filter((a) => a._id == articleID)[0]
+            console.log(cluster);
 
+            if (!cluster) {
+                console.log(articleID);
+                console.log(cluster);
+                res.status(400);
+                return res.send(new Error('Unknown articleID'));
+            }
+
+
+            var rawArticle = cluster.articles.filter((a) => a._id === articleID)[0];
             var article = {
                 id: articleID,
                 title: rawArticle.title,
@@ -46,7 +57,6 @@ router.get('/:id',
                 cluster: rawArticle.cluster,
                 content: utils.htmlEscapeMultilineText(rawArticle.content)
             };
-
             article.related = cluster.articles.map(function (result) {
                 result.content = utils.htmlEscapeMultilineText(result.content);
                 return result;
@@ -58,7 +68,10 @@ router.get('/:id',
                 }
 
                 // Render article to html
-                res.render('article', {article: article, viewToken: viewToken, isCluster: true});
+                res.render('article', {
+                    article: article,
+                    viewToken: viewToken,
+                });
             });
 
         });

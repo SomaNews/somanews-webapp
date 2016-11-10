@@ -6,19 +6,21 @@ var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
 
+router.get('/', (req, res) => { res.redirect('feed');});
+
 // 뉴스 리스트
-router.get('/',
+router.get('/feed',
     login.checkAuth,
 
     function (req, res) {
         'use strict';
 
         // 각 클러스터마다 해당 클러스터에 포함된 뉴스들과 뉴스 갯수를 얻는다.
-        Article.listNewestNewsPerCluster(function (err, articles) {
+        Article.listNewestNewsPerCluster(function (err, clusters) {
             if (err) {
                 return res.send(err);
             }
-            res.render('feedArticle', {articles: articles, isCluster: false});
+            res.render('feed', {clusters: clusters});
         });
     });
 

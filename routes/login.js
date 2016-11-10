@@ -11,7 +11,7 @@ exports = module.exports = function (router) {
 
     // Login page
     router.post('/login', function (req, res, next) {
-        passport.authenticate('local', function(err, user, info) {
+        passport.authenticate('local', function(err, user) {
             if (err) {
                 return next(err);
             }
@@ -32,7 +32,7 @@ exports = module.exports = function (router) {
             return res.send(new Error('Not logon'));
         }
         req.logout();
-        return res.redirect('/articles');
+        return res.redirect('/articles/feed');
     });
 
 

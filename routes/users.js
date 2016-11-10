@@ -7,18 +7,6 @@ var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
 
-/* GET users listing. */
-router.get('/', function (req, res) {
-    'use strict';
-    res.send('respond with a resource');
-});
-
-/* GET feed page. */
-router.get('/:id/feed', function (req, res) {
-    'use strict';
-    res.render('feed');
-});
-
 router.get('/profile',
     login.checkAuth, (req, res) => {
     "use strict";
