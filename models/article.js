@@ -1,3 +1,5 @@
+var knearest = require('../utils/knearest');
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -13,7 +15,8 @@ var ArticleSchema = new Schema({
     category: {type: String, default: ''},
     description: {type: String, default: ''},
     publishedAt: {type: Date, default: null},
-    cluster: {type: Number, default: ''}
+    cluster: {type: Number, default: ''},
+    vector: {type: Array}
 });
 
 var Article = mongoose.model('Article', ArticleSchema);
@@ -76,8 +79,45 @@ exports.getArticle = function (id, callback) {
  */
 exports.findRelatedArticles = function (seedArticle, callback) {
     'use strict';
+
+    if(!knearest.isVectorLoaded()) {
+        // Retry after vector load
+        console.log('Loading vectors...');
+        Article.find({}, {vector: 1}, function (err, articles) {
+            if (err) {
+                return callback(new Error('Vector loading failed'));
+            }
+            console.log('Number of articles : ' + articles.length);
+            var labels = [], vectors = [];
+            for(var i = 0 ; i < articles.length ; i++) {
+                labels.push(articles[i]._id);
+                vectors.push(articles[i].vector);
+            }
+
+            knearest.loadVectors(labels, vectors);
+            // Retry!
+            exports.findRelatedArticles(seedArticle, callback);
+        });
+        return;
+    }
+
+    console.log('Finding similar articles with ' + seedArticle._id);
+    var labels = knearest.findSimilarVectorIndexes(seedArticle.vector, 10);
+    console.log('Articles : ' + labels);
     Article.find({
-        _id: {$ne: seedArticle._id},
-        cluster: seedArticle.cluster
+            _id: {
+                $ne: seedArticle._id,
+                $in: labels
+            },
     }, callback).limit(9);
+};
+
+
+exports.getVector = function (articleID, callback) {
+    exports.getArticle(articleID, function (err, article) {
+        if (err) {
+            return callback(err, null);
+        }
+        return callback(null, article.vector);
+    });
 };
