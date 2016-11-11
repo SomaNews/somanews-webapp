@@ -51,7 +51,8 @@ exports.listNewestNewsPerCluster = function (callback) {
         for(var i = 0 ; i < groups.length ; i++) {
             var group = groups[i];
             clusters[i] = {
-                leading: group.clusters[0]
+                leading: group.clusters[0],
+                count: group.count,
             };
         }
         return callback(null, clusters);

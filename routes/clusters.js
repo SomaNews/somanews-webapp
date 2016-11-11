@@ -6,7 +6,7 @@ var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
 
-router.get('/', (req, res) => { res.redirect('clusters/feed');});
+router.get('/', (req, res) => { res.redirect('/clusters/feed');});
 
 // 뉴스 리스트
 router.get('/feed',
@@ -53,7 +53,8 @@ router.get('/:id',
                 title: rawArticle.title,
                 author: rawArticle.author,
                 imageURL: rawArticle.imageURL,
-                publishedAt: rawArticle.publishedAt,
+                publishedAt: utils.formatDate(rawArticle.publishedAt),
+                sourceURL: rawArticle.link,
                 cluster: rawArticle.cluster,
                 content: utils.htmlEscapeMultilineText(rawArticle.content)
             };

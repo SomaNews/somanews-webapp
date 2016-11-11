@@ -49,15 +49,14 @@ block content
             ul.list-unstyled
                 each cluster in clusters
                     li.col-md-3.col-sm-6.feed-body
-                        .thumbnail
-                            a(href='#{encodeURIComponent(cluster.leading._id)}')
-                                .img-wrapper
-                                    img(src='#{cluster.leading.imageURL}', alt='')
+                        a(href='#{encodeURIComponent(cluster.leading._id)}')
+                            .thumbnail
+                                .ratio-4to3
+                                    .img-wrapper(style='background-image: url(#{cluster.leading.imageURL});')
                                 .caption
-                                    h3 #{cluster.leading.title}
-                                    p #{cluster.leading.description.substring(0, 50)}
+                                    p #{cluster.leading.title}
+                                br
                                 .count
-                                    hr
                                     p 관련기사 #{cluster.count}건
 
         // /.row

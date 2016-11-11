@@ -18,18 +18,18 @@ block content
                 input(type="hidden", id='viewToken', value=viewToken)
 
                 h1 #{article.title}
-                // Author
-                p.lead
-                    | by&nbsp;
-                    a(href='#') #{article.author}
+
+                // Link to original news
+                a(href='#{article.sourceURL}', target='_blank') #{article.sourceURL}
+
                 // Date/Time
-                p
+                span.pull-right
                     span.glyphicon.glyphicon-time
                     |  Posted on #{article.publishedAt}
                 hr
                 // Preview Image
                 if(article.imageURL)
-                    img.img-responsive(src='#{article.imageURL}', alt='')
+                    img.img-responsive.center-block(src='#{article.imageURL}', alt='')
                     hr
                 // Post Content
                 p.lead!= article.content

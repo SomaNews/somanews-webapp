@@ -14,25 +14,20 @@
         height: auto;
         overflow: hidden;
 
-        .ratio-4to3 {
-            position:relative;
-            width:100%;
-            padding-bottom:75%;
+        .img-wrapper {
+            position: absolute;
+            background-position: center;
+            background-size: cover;
 
-            .img-wrapper {
-                position: absolute;
-                background-position: center;
-                background-size: cover;
-
-                width: 100%;
-                height: 100%;
-                overflow:hidden;
-            }
+            width: 100%;
+            height: 100%;
+            overflow:hidden;
         }
 
         .caption {
             overflow: hidden;
             text-overflow: ellipsis;
+            min-height: 5em;
         }
     }
 }

@@ -6,7 +6,7 @@ var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
 
-router.get('/', (req, res) => { res.redirect('feed');});
+router.get('/', (req, res) => { res.redirect('/articles/feed');});
 
 // 뉴스 리스트
 router.get('/feed',
@@ -46,7 +46,8 @@ router.get('/:id',
                 title: ret.title,
                 author: ret.author,
                 imageURL: ret.imageURL,
-                publishedAt: ret.publishedAt,
+                publishedAt: utils.formatDate(ret.publishedAt),
+                sourceURL: ret.link,
                 content: utils.htmlEscapeMultilineText(ret.content)
             };
 
