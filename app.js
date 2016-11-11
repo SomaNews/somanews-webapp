@@ -21,7 +21,7 @@ fs.readdirSync(models)
     .forEach(file => require(join(models, file)));
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var users = require('./routes/profile');
 var articles = require('./routes/articles');
 var clusters = require('./routes/clusters');
 var newsStat = require('./routes/newsStat');

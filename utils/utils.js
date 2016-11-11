@@ -69,17 +69,28 @@ exports.formatDate = function (date) {
 
 /**
  * Make frequency count ( object -> int ) to chartist.js friendly format.
- * @param frequencies - Dictionary of frequencies.
+ * @param entries - Entries
+ * @param attrType - name of attribute being counted.
  * @returns {{labels: Array, items: Array}}
  */
-exports.makeFrequencyGraphData = function (frequencies) {
+exports.makePieGraphData = function (entries, attrType) {
     "use strict";
-    var keys = Object.keys(frequencies);
+    // Count attributes
+    var attrCounts = {};
+    entries.forEach(function (entry) {
+        var attr = entry[attrType];
+        attrCounts[attr] = (attrCounts[attr] || 0) + 1;
+    });
+
+    // Sort by attribute frequencies
+    var keys = Object.keys(attrCounts);
     var l = [];
     for(var i = 0 ; i < keys.length ; i++) {
-        l[l.length] = [frequencies[keys[i]], keys[i]];
+        l[l.length] = [attrCounts[keys[i]], keys[i]];
     }
     l.sort();
+
+    // Return chartist.js format data
     var items = l.map((e) => e[0]);
     var labels = l.map((e) => e[1]);
     return {

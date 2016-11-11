@@ -1,0 +1,52 @@
+//
+   Created by phu54 on 2016-10-30.
+
+extends layout
+
+block content
+    .container
+        // 로그 그래프
+        .row
+            .col-xs-6.col-xs-offset-3
+                .ct-chart.ct-perfect-fourth
+                    script.
+                        graphFrequencies(!{JSON.stringify(logdataGraph)})
+
+        // 괸심 뉴스들
+        if userLikes
+            .news-related
+                .row
+                    .col-lg-12
+                        h3 What you likes
+                // /.row
+                // Page Features
+                ul.list-unstyled
+                    .row.text-center
+                        each related in userLikes
+                            li.col-md-4.col-sm-6.hero-feature
+                                a(href='#{encodeURIComponent(related._id)}')
+                                    .thumbnail
+                                        .ratio-4to3
+                                            if(related.imageURL)
+                                                .img-wrapper(style='background-image: url(#{related.imageURL});')
+                                            else
+                                                .img-wrapper(style='background-image: url(http://placehold.it/800x500);')
+                                        .caption
+                                            p #{related.title}
+
+
+        // 로그 리스트
+        .row
+            table.table.table-bordered.table-striped.table-condensed
+                thead
+                    tr
+                        th= '시간'
+                        th= '제목'
+                        th= '카테고리'
+                tbody
+                    each log in logs
+                        tr
+                            td= log.startedAt
+                            td
+                                a(href=log.article.url)=log.article.title
+                            td= log.cate

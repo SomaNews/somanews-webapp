@@ -75,7 +75,7 @@ exports.getArticle = function (id, callback) {
 
 /**
  * Find up to 9 articles related to specific article
- * @param seedArticle - Article to search from
+ * @param seedArticle - Article to search from, or Vector
  * @param callback - callback (err, articles)
  */
 exports.findRelatedArticles = function (seedArticle, callback) {
@@ -103,11 +103,13 @@ exports.findRelatedArticles = function (seedArticle, callback) {
     }
 
     console.log('Finding similar articles with ' + seedArticle._id);
-    var labels = knearest.findSimilarVectorIndexes(seedArticle.vector, 10);
+    var seedVector = (seedArticle instanceof Article) ? seedArticle.vector : seedArticle;
+    console.log('Seed vector size : ' + seedVector.length);
+    var labels = knearest.findSimilarVectorIndexes(seedVector, 10);
     console.log('Articles : ' + labels);
     Article.find({
             _id: {
-                $ne: seedArticle._id,
+                $ne: (seedArticle instanceof Article) ? seedArticle._id : undefined,
                 $in: labels
             },
     }, callback).limit(9);
