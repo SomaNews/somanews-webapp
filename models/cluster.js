@@ -80,7 +80,9 @@ exports.findClusterContainingArticle = function (articleID, callback) {
 exports.listNewestNewsPerCluster = function (callback) {
     'use strict';
 
-    Cluster.find().sort({ "clusteredAt": 'desc', "cohesion": 'desc' }).limit(12).exec(callback);
+    Cluster.find({}, {leading: 1})
+        .sort({ "clusteredAt": 'desc', "cohesion": 'desc' })
+        .limit(12).exec(callback);
 };
 
 
