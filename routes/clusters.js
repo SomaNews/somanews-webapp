@@ -57,7 +57,7 @@ router.get('/:id',
                 title: rawArticle.title,
                 author: rawArticle.author,
                 imageURL: rawArticle.imageURL,
-                publishedAt: utils.formatDate(rawArticle.publishedAt),
+                publishedAt: rawArticle.publishedAt,
                 sourceURL: rawArticle.link,
                 cluster: rawArticle.cluster,
                 content: utils.htmlEscapeMultilineText(rawArticle.content)

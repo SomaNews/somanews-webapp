@@ -51,7 +51,7 @@ router.get('/:id',
                 title: ret.title,
                 author: ret.author,
                 imageURL: ret.imageURL,
-                publishedAt: utils.formatDate(ret.publishedAt),
+                publishedAt: ret.publishedAt,
                 sourceURL: ret.link,
                 content: utils.htmlEscapeMultilineText(ret.content)
             };

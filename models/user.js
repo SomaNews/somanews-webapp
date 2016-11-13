@@ -5,7 +5,7 @@ var passport = require('passport');
 var UserSchema = new mongoose.Schema({
     email: {type: String, unique: true, required: true},
     passwordHash: {type: String, required: true},
-    vector: {type: Array}
+    vector: {type: Array, default: new Array(100).fill(0)}
 });
 
 var User = mongoose.model('User', UserSchema);
@@ -139,12 +139,7 @@ function createUser(email, password, callback) {
             if (err) {
                 return callback(err, false);
             }
-
-            console.log('Creating new user');
-            console.log(' - email : ' + email);
-            console.log(' - password : ' + password);
-            console.log(' - hash : ' + hash);
-
+            
             var user = new User({email: email, passwordHash: hash});
             user.save(function (err) {
                 if (err) {

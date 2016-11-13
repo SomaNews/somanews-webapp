@@ -1,0 +1,28 @@
+//
+   Created by whyask37 on 2016. 11. 11..
+
+mixin articleList(title, articles)
+    .list-article
+        .row
+            .col-lg-12
+                h3= title
+
+        // Page Features
+        ul.list-unstyled
+            .row.text-center
+                each article in articles
+                    li.col-md-4.col-sm-6.hero-feature
+                        .thumbnail
+                            a(href='#{encodeURIComponent(article._id)}')
+                                .ratio-4to3
+                                    if(article.imageURL)
+                                        .img-wrapper(style='background-image: url(#{article.imageURL});')
+                                    else
+                                        .img-wrapper(style='background-image: url(http://placehold.it/800x500);')
+                                .caption
+                                    p
+                                        img.providerIcon(src='/images/providerIcons/#{article.provider}.ico')
+                                        | #{article.title}
+                            p.time
+                                span.glyphicon.glyphicon-time
+                                | #{formatDate(article.publishedAt)}

@@ -14,7 +14,7 @@ block content
 
         // 괸심 뉴스들
         block userLikes
-            include articleList
+            +articleList(articleList.title, articleList.articles)
 
         // 로그 리스트
         .row
@@ -27,7 +27,7 @@ block content
                 tbody
                     each log in logs
                         tr
-                            td= log.startedAt
+                            td= formatDate(log.startedAt)
                             td
                                 a(href=log.article.url)=log.article.title
                             td= log.cate

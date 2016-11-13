@@ -24,34 +24,3 @@
     }
 }
 
-.list-article {
-    margin-bottom: 30px;
-
-    .thumbnail {
-        position: relative;
-        height: auto;
-        overflow: hidden;
-
-        .img-wrapper {
-            position: absolute;
-            background-position: center;
-            background-size: cover;
-
-            width: 100%;
-            height: 100%;
-            overflow:hidden;
-        }
-
-        .caption {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            height: 5em;
-
-            .providerIcon {
-                width: 1.1em;
-                height: 1.1em;
-                margin-right: .5em;
-            }
-        }
-    }
-}

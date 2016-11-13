@@ -9,76 +9,30 @@ block content
 
     // Page Content
     .container
-        // Blog Post Content Column
-        .col-lg-8
-            // Blog Post
-            // Title
-            .news-body
-                input(type="hidden", id='articleID', value=article.id)
-                input(type="hidden", id='viewToken', value=viewToken)
+        // Blog Post
+        // Title
+        .news-body
+            input(type="hidden", id='articleID', value=article.id)
+            input(type="hidden", id='viewToken', value=viewToken)
 
-                h1 #{article.title}
+            h1 #{article.title}
 
-                // Link to original news
-                a(href='#{article.sourceURL}', target='_blank') #{article.sourceURL}
+            // Link to original news
+            a(href='#{article.sourceURL}', target='_blank') [언론사에서 보기]
 
-                // Date/Time
-                span.pull-right
-                    span.glyphicon.glyphicon-time
-                    |  Posted on #{article.publishedAt}
+            // Date/Time
+            span.pull-right
+                span.glyphicon.glyphicon-time
+                |  Posted on #{formatDate(article.publishedAt)}
+            hr
+            // Preview Image
+            if(article.imageURL)
+                img.img-responsive.center-block(src='#{article.imageURL}', alt='')
                 hr
-                // Preview Image
-                if(article.imageURL)
-                    img.img-responsive.center-block(src='#{article.imageURL}', alt='')
-                    hr
-                // Post Content
-                p.lead!= article.content
+            // Post Content
+            p.lead!= article.content
 
-                hr
+            hr
 
-            block relatedArticles
-                include articleList
-
-            // /.row
-        // Blog Sidebar Widgets Column
-        .col-md-4
-            // Blog Search Well
-            .well
-                h4 Topic Search
-                .input-group
-                    input.form-control(type='text')
-                    span.input-group-btn
-                        button.btn.btn-default(type='button')
-                            span.glyphicon.glyphicon-search
-                // /.input-group
-            // Blog Categories Well
-            .well
-                h4 News Categories
-                .row
-                    .col-lg-6
-                        ul.list-unstyled
-                            li
-                                a(href='#') Category Name
-                            li
-                                a(href='#') Category Name
-                            li
-                                a(href='#') Category Name
-                            li
-                                a(href='#') Category Name
-                    .col-lg-6
-                        ul.list-unstyled
-                            li
-                                a(href='#') Category Name
-                            li
-                                a(href='#') Category Name
-                            li
-                                a(href='#') Category Name
-                            li
-                                a(href='#') Category Name
-                // /.row
-            // Side Widget Well
-            .well
-                h4 Side Widget Well
-                p
-                    | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, perspiciatis adipisci accusamus laudantium odit aliquam repellat tempore quos aspernatur vero.
-    // /.row
+        block relatedArticles
+            +articleList(articleList.title, articleList.articles)

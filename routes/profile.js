@@ -23,7 +23,7 @@ router.get('/profile',
         logs = logs.map(function (entry) {
             return {
                 cate: entry.article.cate,
-                startedAt: utils.formatDate(entry.startedAt),
+                startedAt: entry.startedAt,
                 article: {
                     title: entry.article.title,
                     url: '/articles/' + encodeURIComponent(entry.article._id),
