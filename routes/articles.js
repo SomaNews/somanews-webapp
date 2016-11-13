@@ -5,22 +5,18 @@ var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
 var async = require('async');
+var Article = require('../models/article');
 
 // Cluster engine selector
 router.use('/', (req, res, next) => {
     "use strict";
-    var Article;
-
-    // Divide model based on cluster type
-    if(req.session.clusterType == 'A') {
-        Article = require('../models/article.js');
-    }
-
-    else {
-        Article = require('../models/cluster.js');
-    }
-    req.Article = Article;
-    next();
+    Article.selectCollection(req.session.clusterType, (err, colls) => {
+        if(err) {
+            return next(err);
+        }
+        req.colls = colls;
+        next();
+    });
 });
 
 
@@ -40,6 +36,7 @@ router.get('/modeB', (req, res) => {
 });
 
 
+
 // 뉴스 리스트
 router.get('/feed',
     login.checkAuth,
@@ -48,7 +45,7 @@ router.get('/feed',
         'use strict';
 
         // 각 클러스터마다 해당 클러스터에 포함된 뉴스들과 뉴스 갯수를 얻는다.
-        req.Article.listNewestNewsPerCluster(function (err, clusters) {
+        Article.listNewestNewsPerCluster(req.colls, function (err, clusters) {
             if (err) {
                 return res.send(err);
             }
@@ -73,21 +70,12 @@ router.get('/:id',
 
         async.waterfall([
             (callback) => {
-                req.Article.getArticle(articleID, callback);
+                Article.getArticle(req.colls, articleID, callback);
             },
             (ret, callback) => {
                 if (!ret) return callback(new Error('Unknown news ' + articleID));
-                article = {
-                    _id: articleID,
-                    title: ret.title,
-                    author: ret.author,
-                    imageURL: ret.imageURL,
-                    publishedAt: ret.publishedAt,
-                    sourceURL: ret.link,
-                    content: ret.content,
-                    vector: ret.vector
-                };
-                req.Article.findRelatedArticles(article, callback);
+                article = ret;
+                Article.findRelatedArticles(req.colls, article, callback);
             },
             (related, callback) => {
                 articleList = {
@@ -109,6 +97,7 @@ router.get('/:id',
                 res.render('error', { error: err });
             }});
     });
+
 
 
 // 뉴스를 다보고 다음 뉴스로 넘어가거나, 종료할 떄, 뉴스를 다보았다는 로그 수집
