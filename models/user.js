@@ -1,14 +1,7 @@
-var mongoose = require('mongoose');
+var dbconn = require('../utils/dbConnector');
+var mongodb = require('mongodb');
 var bcrypt = require('bcrypt');
 var passport = require('passport');
-
-var UserSchema = new mongoose.Schema({
-    email: {type: String, unique: true, required: true},
-    passwordHash: {type: String, required: true},
-    vector: {type: Array, default: new Array(100).fill(0)}
-});
-
-var User = mongoose.model('User', UserSchema);
 
 
 // Login using passport-local
@@ -22,27 +15,31 @@ passport.use(new LocalStrategy(
     function (email, password, done) {
         'use strict';
 
-        User.findOne({email: email}, function (err, user) {
-            if (err) {
-                return done(err);
-            }
+        dbconn.getCollection('users', (err, coll) => {
+            if (err) return callback(err);
 
-            if (!user) {
-                return done(null, false, {message: 'Incorrect email.'});
-            }
-
-            // Check password
-            bcrypt.compare(password, user.passwordHash, function (err, yes) {
+            coll.findOne({email: email}, function (err, user) {
                 if (err) {
                     return done(err);
                 }
 
-                if (yes) {
-                    console.log('login as ' + email + ' succeeded');
-                    return done(null, user);
+                if (!user) {
+                    return done(null, false, {message: 'Incorrect email.'});
                 }
-                console.log('login as ' + email + ' failed');
-                return done(null, false, {message: 'Incorrect password.'});
+
+                // Check password
+                bcrypt.compare(password, user.passwordHash, function (err, yes) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    if (yes) {
+                        console.log('login as ' + email + ' succeeded');
+                        return done(null, user);
+                    }
+                    console.log('login as ' + email + ' failed');
+                    return done(null, false, {message: 'Incorrect password.'});
+                });
             });
         });
     }
@@ -66,11 +63,15 @@ passport.deserializeUser(function (user, done) {
  */
 function findUserByEmail(email, callback) {
     'use strict';
-    User.findOne({email: email}, function (err, user) {
-        if (err) {
-            return callback(err);
-        }
-        return callback(err, user);
+
+    dbconn.getCollection('users', (err, coll) => {
+        if (err) return callback(err);
+        coll.findOne({email: email}, function (err, user) {
+            if (err) {
+                return callback(err);
+            }
+            return callback(err, user);
+        });
     });
 }
 
@@ -139,14 +140,17 @@ function createUser(email, password, callback) {
             if (err) {
                 return callback(err, false);
             }
-            
-            var user = new User({email: email, passwordHash: hash});
-            user.save(function (err) {
-                if (err) {
-                    console.log(err.message);
-                    return callback(err, false);
-                }
-                return callback(null, true);
+
+            dbconn.getCollection('users', (err, coll) => {
+                if (err) return callback(err);
+
+                coll.insertOne({email: email, passwordHash: hash}, function (err) {
+                    if (err) {
+                        console.log(err.message);
+                        return callback(err, false);
+                    }
+                    return callback(null, true);
+                });
             });
         });
     });

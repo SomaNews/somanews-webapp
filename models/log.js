@@ -1,14 +1,5 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-
-var LogSchema = new Schema({
-    user: {type: Schema.ObjectId, ref: 'User'},
-    article: {type: String},
-    startedAt: {type: Date, default: Date.now},
-    endedAt: {type: Date, default: null}
-});
-
-var Log = mongoose.model('Log', LogSchema);
+var dbconn = require('../utils/dbConnector');
+var mongodb = require('mongodb');
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -22,17 +13,19 @@ var Log = mongoose.model('Log', LogSchema);
 exports.logArticleEnter = function (userID, articleID, callback) {
     'use strict';
 
-    var startLog = new Log({
-        user: userID,
-        article: articleID,
-        startedAt: new Date()
-    });
+    dbconn.getCollection('logs', (err, coll) => {
+        if (err) return callback(err);
 
-    startLog.save(function (err, startLog) {
-        if (err) {
-            return callback(err, null);
-        }
-        callback(null, startLog._id);
+        coll.insertOne({
+            user: userID,
+            article: articleID,
+            startedAt: new Date()
+        }, function (err, startLog) {
+            if (err) {
+                return callback(err, null);
+            }
+            callback(null, startLog.insertedId);
+        });
     });
 };
 
@@ -45,23 +38,19 @@ exports.logArticleEnter = function (userID, articleID, callback) {
 exports.logArticleLeave = function (viewToken, callback) {
     'use strict';
 
-    Log.findById(viewToken, function (err, logEntry) {
-        if (err) {
-            return callback(err);
-        }
-        if (logEntry === null) {
-            return callback(new Error('Invalid viewToken'));
-        }
-        if (logEntry.endedAt !== null) {
-            return callback(new Error('Token has already expired'));
-        }
-        logEntry.endedAt = new Date();
-        logEntry.save(function (err) {
-            if (err) {
-                return callback(err);
+    dbconn.getCollection('logs', (err, coll) => {
+        if (err) return callback(err);
+
+        coll.findOneAndUpdate(
+            {_id: new mongodb.ObjectID(viewToken)},
+            {$set: {endedAt: new Date()}},
+            function (err, r) {
+                if (err) {
+                    return callback(err);
+                }
+                return callback(null);
             }
-            return callback(null);
-        });
+        );
     });
 };
 

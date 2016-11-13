@@ -11,7 +11,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-var mongoose = require('mongoose');
 var passport = require('passport');
 var join = require('path').join;
 var models = join(__dirname, 'models');
@@ -87,22 +86,5 @@ app.use(function (req, res, next) {
     err.status = 404;
     res.render('error', {error: err});
 });
-
-
-connect()
-.on('error', console.log)
-.on('disconnected', connect)
-.once('open', listen);
-
-function listen () {
-    console.log("Connected to mongod server");
-    if (app.get('env') === 'test') return;
-    console.log('Express app started on port ' + port);
-}
-
-function connect () {
-    var options = { server: { socketOptions: { keepAlive: 1 } } };
-    return mongoose.connect('mongodb://ssomanews:ssomanews1029@104.199.210.143:27017/somanews', options).connection;
-}
 
 module.exports = app;

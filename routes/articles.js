@@ -36,6 +36,7 @@ router.get('/modeB', (req, res) => {
 });
 
 
+
 // 뉴스 리스트
 router.get('/feed',
     login.checkAuth,
@@ -96,6 +97,7 @@ router.get('/:id',
                 res.render('error', { error: err });
             }});
     });
+
 
 
 // 뉴스를 다보고 다음 뉴스로 넘어가거나, 종료할 떄, 뉴스를 다보았다는 로그 수집
