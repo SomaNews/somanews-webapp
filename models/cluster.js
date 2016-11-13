@@ -21,15 +21,10 @@ var Cluster = mongoose.model('Cluster', ClusterSchema);
  */
 exports.getArticle = function (id, callback) {
     "use strict";
-    exports.findClusterContainingArticle(id, (err, cluster) => {
+    Cluster.findOne({"articles._id": id}, {"articles.$": 1}, (err, cluster) => {
         if (err) return callback(err);
         if (!cluster) return callback(new Error('Unknown news ' + id));
-        for (var i = 0 ; i < cluster.articles.length ; i++) {
-            if (cluster.articles[i]._id == id) {
-                return callback(null, cluster.articles[i]);
-            }
-        }
-        return callback(new Error('Unknown news ' + id));
+        return callback(null, cluster.articles[0]);
     });
 };
 
