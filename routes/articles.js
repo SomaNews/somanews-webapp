@@ -11,11 +11,8 @@ router.use('/', (req, res, next) => {
     "use strict";
     var Article;
 
-    if(req.session.type === undefined) {
-        req.session.type = 'A';
-    }
-
-    if(req.session.type == 'A') {
+    // Divide model based on cluster type
+    if(req.session.clusterType == 'A') {
         Article = require('../models/article.js');
     }
 
@@ -32,13 +29,13 @@ router.get('/', (req, res) => { res.redirect('/articles/feed');});
 
 router.get('/modeA', (req, res) => {
     "use strict";
-    req.session.type = 'A';
+    req.session.clusterType = 'A';
     res.redirect('/articles');
 });
 
 router.get('/modeB', (req, res) => {
     "use strict";
-    req.session.type = 'B';
+    req.session.clusterType = 'B';
     res.redirect('/articles');
 });
 

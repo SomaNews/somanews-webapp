@@ -67,6 +67,15 @@ app.use(function (req, res, next) {
     next();
 });
 
+// ClusterType 세션 세팅
+app.use((req, res, next) => {
+    // Set cluster type
+    if(req.session.clusterType === undefined) {
+        req.session.clusterType = 'A';
+    }
+    next();
+});
+
 app.use('/', routes);
 app.use('/', users);
 app.use('/articles', articles);
@@ -79,29 +88,6 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
 
 connect()
 .on('error', console.log)

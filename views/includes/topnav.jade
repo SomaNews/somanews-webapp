@@ -21,9 +21,9 @@ nav#mainNav.navbar.navbar-default.navbar-fixed-top
                 li
                     a.page-scroll(href='/#contact') Contact
                 if(request.user)
-                    li(class=((request.session.type === 'A') ? 'active' : ''))
+                    li(class=((request.session.clusterType === 'A') ? 'active' : ''))
                         a.page-scroll(href='/articles/modeA') Page A
-                    li(class=((request.session.type === 'B') ? 'active' : ''))
+                    li(class=((request.session.clusterType === 'B') ? 'active' : ''))
                         a.page-scroll(href='/articles/modeB') Page B
                     li
                         a.page-scroll(href='/profile') Profile
