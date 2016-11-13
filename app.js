@@ -21,11 +21,11 @@ fs.readdirSync(models)
 
 var routes = require('./routes/index');
 var users = require('./routes/profile');
+var articleModel = require('./models/article');
 var articles = require('./routes/articles');
 var newsStat = require('./routes/newsStat');
 var login = require('./routes/login');
 
-var port = process.env.PORT || 3000;
 var app = express();
 
 // view engine setup
@@ -67,13 +67,22 @@ app.use(function (req, res, next) {
 });
 
 // ClusterType 세션 세팅
+
 app.use((req, res, next) => {
     // Set cluster type
     if(req.session.clusterType === undefined) {
         req.session.clusterType = 'A';
     }
-    next();
+
+    articleModel.selectCollection(req.session.clusterType, (err, colls) => {
+        if(err) {
+            return next(err);
+        }
+        req.colls = colls;
+        next();
+    });
 });
+
 
 app.use('/', routes);
 app.use('/', users);
@@ -81,7 +90,7 @@ app.use('/articles', articles);
 app.use('/newsStat', newsStat);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function (req, res) {
     var err = new Error('Not Found');
     err.status = 404;
     res.render('error', {error: err});

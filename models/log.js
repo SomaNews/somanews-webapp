@@ -44,12 +44,7 @@ exports.logArticleLeave = function (viewToken, callback) {
         coll.findOneAndUpdate(
             {_id: new mongodb.ObjectID(viewToken)},
             {$set: {endedAt: new Date()}},
-            function (err, r) {
-                if (err) {
-                    return callback(err);
-                }
-                return callback(null);
-            }
+            callback
         );
     });
 };
@@ -58,13 +53,14 @@ exports.logArticleLeave = function (viewToken, callback) {
 
 /**
  * Get user view log
+ * @param colls - Article collections
  * @param userID
  * @param start - Number to skip. Useful for paging.
  * @param count - Number to get.
  * @param callback
  * @returns {*}
  */
-exports.getUserLog = function (userID, start, count, callback) {
+exports.getUserLog = function (colls, userID, start, count, callback) {
     "use strict";
 
     if (count < 0) {
@@ -76,49 +72,60 @@ exports.getUserLog = function (userID, start, count, callback) {
         count = 100;
     }
 
-    Log.aggregate([
-        { $match: {user: new mongoose.Types.ObjectId(userID)} },
-        { $sort: { startedAt: -1 } },
-        { $skip: start },
-        { $limit: count },
-        { $lookup: {
-            from: 'articles',
-            localField: 'article',
-            foreignField: '_id',
-            as: 'article'
-        }},
-        { $unwind: '$article' }
-    ], function (err, ret) {
-        if (err) {
-            return callback(err);
-        }
-        return callback(null, ret);
+    dbconn.getCollection('logs', (err, coll) => {
+        if (err) return callback(err);
+        coll.aggregate([
+            { $sort: { startedAt: -1 } },
+            { $skip: start },
+            { $limit: count },
+            { $lookup: {
+                from: colls.articleDBName,
+                localField: 'article',
+                foreignField: '_id',
+                as: 'article'
+            }},
+            { $unwind: '$article' }
+        ], function (err, ret) {
+            if (err) {
+                return callback(err);
+            }
+            return callback(null, ret);
+        });
     });
 };
 
 
 /**
  * 사용자가 많이 본 클러스터를 찾습니다
+ * @param colls - Article collections
  * @param userID - 유저 아이디
  * @param callback - callback(err, clusters)
  */
-exports.getUserFavoriteClusters = function (userID, callback) {
+exports.getUserFavoriteClusters = function (colls, userID, callback) {
     "use strict";
 
-    Log.aggregate([
-        { $match: {user: new mongoose.Types.ObjectId(userID)} },
-        { $sort: { startedAt: -1 } },
-        { $limit: 100 },  // Count only up to 100 articles
-        { $lookup: {
-            from: 'articles',
-            localField: 'article',
-            foreignField: '_id',
-            as: 'article'
-        }},
-        { $unwind: '$article' },
-        { $group : {
-            '_id': "$article.cluster",
-            count: {$sum: 1},
-        }},
-    ], callback);
+
+    dbconn.getCollection('logs', (err, coll) => {
+        if (err) return callback(err);
+        coll.aggregate([
+            {$match: {user: new mongodb.ObjectId(userID)}},
+            {$sort: {startedAt: -1}},
+            {$limit: 100},  // Count only up to 100 articles
+            {
+                $lookup: {
+                    from: colls.articleDBName,
+                    localField: 'article',
+                    foreignField: '_id',
+                    as: 'article'
+                }
+            },
+            {$unwind: '$article'},
+            {
+                $group: {
+                    '_id': "$article.cluster",
+                    count: {$sum: 1},
+                }
+            },
+        ], callback);
+    });
 };

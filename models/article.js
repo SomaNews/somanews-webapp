@@ -17,25 +17,33 @@ exports.selectCollection = function (clusterType, callback) {
     dbconn.getDB((err, db) => {
         if (err) return callback(err);
 
+        var articleDBname, clusterDBname;
+
+
         if(clusterType == 'A') {
-            articleDB = db.collection('articles');
-            clusterDB = db.collection('clusters');
+            articleDBname = 'aarticles';
+            clusterDBname = 'aclusters';
         }
         else {
-            articleDB = db.collection('barticles');
-            clusterDB = db.collection('bclusters');
+            articleDBname = 'barticles';
+            clusterDBname = 'bclusters';
         }
+
+        articleDB = db.collection(articleDBname);
+        clusterDB = db.collection(clusterDBname);
 
         Promise.all([articleDB, clusterDB]).then((values) => {
             callback(null, {
                 articleDB: values[0],
-                clusterDB: values[1]
+                articleDBName: articleDBname,
+                clusterDB: values[1],
+                clusterDBName: clusterDBname
             });
         }, (err) => {
             callback(err);
         });
     });
-}
+};
 
 
 /**

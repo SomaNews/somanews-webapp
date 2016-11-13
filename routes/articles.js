@@ -7,18 +7,6 @@ var utils = require('../utils/utils');
 var async = require('async');
 var Article = require('../models/article');
 
-// Cluster engine selector
-router.use('/', (req, res, next) => {
-    "use strict";
-    Article.selectCollection(req.session.clusterType, (err, colls) => {
-        if(err) {
-            return next(err);
-        }
-        req.colls = colls;
-        next();
-    });
-});
-
 
 // Index to feed
 router.get('/', (req, res) => { res.redirect('/articles/feed');});

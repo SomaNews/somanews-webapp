@@ -18,7 +18,7 @@ router.get('/profile',
         var logs;
         async.waterfall([
             function (callback) {
-                Log.getUserLog(req.user._id, 0, 100, callback)
+                Log.getUserLog(req.colls, req.user._id, 0, 100, callback);
             },
             function (rawlogs, callback) {
                 // Get 'cleaned' categories.
@@ -53,7 +53,7 @@ router.get('/profile',
                 };
 
                 if (vsum) {
-                    return Article.findRelatedArticles(vsum, (err, data) => {
+                    return Article.findRelatedArticles(req.colls, vsum, (err, data) => {
                         if (!err) userLikes.articles = data;
                         callback(null);
                     });
@@ -70,7 +70,7 @@ router.get('/profile',
                 callback(null);
             }
         ], (err) => {
-            Log.getUserFavoriteClusters(req.user._id, (err, ret) => {console.log(ret);});
+            Log.getUserFavoriteClusters(req.colls, req.user._id, (err, ret) => {console.log(ret);});
 
             if (err) {
                 res.render('error', {error: err});
