@@ -5,6 +5,7 @@ var Article = require('../models/article');
 var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
+var async = require('async');
 
 router.get('/', (req, res) => { res.redirect('/articles/feed');});
 
@@ -32,55 +33,50 @@ router.get('/feed',
 // 각 뉴스마다
 router.get('/:id',
     login.checkAuth,
+
     function (req, res) {
         'use strict';
 
         var articleID = req.params.id;
+        var article, articleList;
 
-        Article.getArticle(articleID, function (err, ret) {
-            if (err) {
-                return res.send(err);
-            }
-
-            if (!ret) {
-                return res.send(new Error('Unknown news'));
-            }
-
-            var article = {
-                id: articleID,
-                title: ret.title,
-                author: ret.author,
-                imageURL: ret.imageURL,
-                publishedAt: ret.publishedAt,
-                sourceURL: ret.link,
-                content: utils.htmlEscapeMultilineText(ret.content)
-            };
-
-            // 클러스터가 같은 Article들을 related로 해준다
-            Article.findRelatedArticles(ret, function (err, results) {
-                if (err) {
-                    return res.send(err);
-                }
-
-                var articleList = {
-                    title: 'Related',
-                    articles: results
+        async.waterfall([
+            (callback) => {
+                Article.getArticle(articleID, callback);
+            },
+            (ret, callback) => {
+                if (!ret) callback(new Error('Unknown news'));
+                article = {
+                    _id: articleID,
+                    title: ret.title,
+                    author: ret.author,
+                    imageURL: ret.imageURL,
+                    publishedAt: ret.publishedAt,
+                    sourceURL: ret.link,
+                    content: ret.content,
+                    vector: ret.vector
                 };
-
-                Log.logArticleEnter(req.user._id, articleID, function (err, viewToken) {
-                    if (err) {
-                        return res.send(err);
-                    }
-
-                    // Render article to html
-                    res.render('article', {
-                        article: article,
-                        viewToken: viewToken,
-                        articleList: articleList
-                    });
+                Article.findRelatedArticles(article, callback);
+            },
+            (related, callback) => {
+                articleList = {
+                    title: 'Related',
+                    articles: related
+                };
+                Log.logArticleEnter(req.user._id, articleID, callback);
+            },
+            (viewToken, callback) => {
+                res.render('article', {
+                    article: article,
+                    viewToken: viewToken,
+                    articleList: articleList
                 });
-            });
-        });
+                callback(null);
+            }
+        ], (err) => {
+            if (err) {
+                res.send(err);
+            }});
     });
 
 

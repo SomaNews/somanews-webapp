@@ -5,6 +5,7 @@ var Cluster = require('../models/cluster');
 var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
+var async = require('async');
 
 router.get('/', (req, res) => { res.redirect('/clusters/feed');});
 
@@ -35,52 +36,51 @@ router.get('/:id',
         'use strict';
 
         var articleID = req.params.id;
+        var article, articleList;
 
-        Cluster.findClusterContainingArticle(articleID, function (err, cluster) {
-            if (err) {
-                return res.send(err);
-            }
-
-            console.log(cluster);
-
-            if (!cluster) {
-                console.log(articleID);
-                console.log(cluster);
-                res.status(400);
-                return res.send(new Error('Unknown articleID'));
-            }
-
-
-            var rawArticle = cluster.articles.filter((a) => a._id === articleID)[0];
-            var article = {
-                id: articleID,
-                title: rawArticle.title,
-                author: rawArticle.author,
-                imageURL: rawArticle.imageURL,
-                publishedAt: rawArticle.publishedAt,
-                sourceURL: rawArticle.link,
-                cluster: rawArticle.cluster,
-                content: utils.htmlEscapeMultilineText(rawArticle.content)
-            };
-
-            var articleList = {
-                title: 'Related',
-                articles: cluster.articles
-            };
-
-            Log.logArticleEnter(req.user._id, articleID, function (err, viewToken) {
-                if (err) {
-                    return res.send(err);
+        async.waterfall([
+            (callback) => {
+                Cluster.findClusterContainingArticle(articleID, callback);
+            },
+            (cluster, callback) => {
+                if (!cluster) {
+                    console.log(articleID, cluster);
+                    return callback(new Error('Unknown articleID'));
                 }
 
+                var rawArticle = cluster.articles.filter((a) => a._id === articleID)[0];
+                article = {
+                    id: articleID,
+                    title: rawArticle.title,
+                    author: rawArticle.author,
+                    imageURL: rawArticle.imageURL,
+                    publishedAt: rawArticle.publishedAt,
+                    sourceURL: rawArticle.link,
+                    cluster: rawArticle.cluster,
+                    content: utils.htmlEscapeMultilineText(rawArticle.content)
+                };
+
+                articleList = {
+                    title: 'Related',
+                    articles: cluster.articles
+                };
+
+                Log.logArticleEnter(req.user._id, articleID, callback);
+            },
+
+            (viewToken, callback) => {
                 // Render article to html
                 res.render('article', {
                     article: article,
                     articleList: articleList,
                     viewToken: viewToken,
                 });
-            });
-
+                callback(null);
+            }
+        ], (err) => {
+            if(err) {
+                res.send(err);
+            }
         });
     });
 

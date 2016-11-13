@@ -67,6 +67,14 @@ exports.logArticleLeave = function (viewToken, callback) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Get user view log
+ * @param userID
+ * @param start - Number to skip. Useful for paging.
+ * @param count - Number to get.
+ * @param callback
+ * @returns {*}
+ */
 exports.getUserLog = function (userID, start, count, callback) {
     "use strict";
 
@@ -82,7 +90,8 @@ exports.getUserLog = function (userID, start, count, callback) {
     Log.aggregate([
         { $match: {user: new mongoose.Types.ObjectId(userID)} },
         { $sort: { startedAt: -1 } },
-        { $skip: start }, { $limit: count },
+        { $skip: start },
+        { $limit: count },
         { $lookup: {
             from: 'articles',
             localField: 'article',
