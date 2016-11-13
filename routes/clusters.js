@@ -76,6 +76,7 @@ router.get('/:id',
                 // Render article to html
                 res.render('article', {
                     article: article,
+                    articleList: articleList,
                     viewToken: viewToken,
                 });
             });
