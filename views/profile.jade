@@ -24,10 +24,12 @@ block content
                         th= '시간'
                         th= '제목'
                         th= '카테고리'
+                        th= '클러스터'
                 tbody
                     each log in logs
                         tr
                             td= formatDate(log.startedAt)
                             td
                                 a(href=log.article.url)=log.article.title
-                            td= log.cate
+                            td= log.article.cate
+                            td= log.article.cluster

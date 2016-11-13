@@ -106,3 +106,30 @@ exports.getUserLog = function (userID, start, count, callback) {
         return callback(null, ret);
     });
 };
+
+
+/**
+ * 사용자가 많이 본 클러스터를 찾습니다
+ * @param userID - 유저 아이디
+ * @param callback - callback(err, clusters)
+ */
+exports.getUserFavoriteClusters = function (userID, callback) {
+    "use strict";
+
+    Log.aggregate([
+        { $match: {user: new mongoose.Types.ObjectId(userID)} },
+        { $sort: { startedAt: -1 } },
+        { $limit: 100 },  // Count only up to 100 articles
+        { $lookup: {
+            from: 'articles',
+            localField: 'article',
+            foreignField: '_id',
+            as: 'article'
+        }},
+        { $unwind: '$article' },
+        { $group : {
+            '_id': "$article.cluster",
+            count: {$sum: 1},
+        }},
+    ], callback);
+};
