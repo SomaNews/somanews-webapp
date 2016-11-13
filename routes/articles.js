@@ -1,13 +1,47 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var Article = require('../models/article');
 var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
 var async = require('async');
 
+// Cluster engine selector
+router.use('/', (req, res, next) => {
+    "use strict";
+    var Article;
+
+    if(req.session.type === undefined) {
+        req.session.type = 'A';
+    }
+
+    if(req.session.type == 'A') {
+        Article = require('../models/article.js');
+    }
+
+    else {
+        Article = require('../models/cluster.js');
+    }
+    req.Article = Article;
+    next();
+});
+
+
+// Index to feed
 router.get('/', (req, res) => { res.redirect('/articles/feed');});
+
+router.get('/modeA', (req, res) => {
+    "use strict";
+    req.session.type = 'A';
+    res.redirect('/articles');
+});
+
+router.get('/modeB', (req, res) => {
+    "use strict";
+    req.session.type = 'B';
+    res.redirect('/articles');
+});
+
 
 // 뉴스 리스트
 router.get('/feed',
@@ -17,7 +51,7 @@ router.get('/feed',
         'use strict';
 
         // 각 클러스터마다 해당 클러스터에 포함된 뉴스들과 뉴스 갯수를 얻는다.
-        Article.listNewestNewsPerCluster(function (err, clusters) {
+        req.Article.listNewestNewsPerCluster(function (err, clusters) {
             if (err) {
                 return res.send(err);
             }
@@ -42,10 +76,10 @@ router.get('/:id',
 
         async.waterfall([
             (callback) => {
-                Article.getArticle(articleID, callback);
+                req.Article.getArticle(articleID, callback);
             },
             (ret, callback) => {
-                if (!ret) callback(new Error('Unknown news'));
+                if (!ret) return callback(new Error('Unknown news ' + articleID));
                 article = {
                     _id: articleID,
                     title: ret.title,
@@ -56,7 +90,7 @@ router.get('/:id',
                     content: ret.content,
                     vector: ret.vector
                 };
-                Article.findRelatedArticles(article, callback);
+                req.Article.findRelatedArticles(article, callback);
             },
             (related, callback) => {
                 articleList = {
@@ -75,7 +109,7 @@ router.get('/:id',
             }
         ], (err) => {
             if (err) {
-                res.send(err);
+                res.render('error', { error: err });
             }});
     });
 

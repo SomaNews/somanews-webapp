@@ -21,10 +21,10 @@ nav#mainNav.navbar.navbar-default.navbar-fixed-top
                 li
                     a.page-scroll(href='/#contact') Contact
                 if(request.user)
-                    li
-                        a.page-scroll(href='/articles/feed') Page A
-                    li
-                        a.page-scroll(href='/clusters/feed') Page B
+                    li(class=((request.session.type === 'A') ? 'active' : ''))
+                        a.page-scroll(href='/articles/modeA') Page A
+                    li(class=((request.session.type === 'B') ? 'active' : ''))
+                        a.page-scroll(href='/articles/modeB') Page B
                     li
                         a.page-scroll(href='/profile') Profile
 
