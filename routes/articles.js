@@ -20,7 +20,12 @@ router.get('/feed',
             if (err) {
                 return res.send(err);
             }
-            res.render('feed', {clusters: clusters});
+
+            var articleList = {
+                title: '관심있어하실만한 뉴스',
+                articles: clusters.map((cluster) => cluster.leading)
+            };
+            res.render('feed', {articleList: articleList});
         });
     });
 
@@ -57,10 +62,10 @@ router.get('/:id',
                     return res.send(err);
                 }
 
-                article.related = results.map(function (result) {
-                    result.content = utils.htmlEscapeMultilineText(result.content);
-                    return result;
-                });
+                var articleList = {
+                    title: 'Related',
+                    articles: results
+                };
 
                 Log.logArticleEnter(req.user._id, articleID, function (err, viewToken) {
                     if (err) {
@@ -68,7 +73,11 @@ router.get('/:id',
                     }
 
                     // Render article to html
-                    res.render('article', {article: article, viewToken: viewToken, isCluster: false});
+                    res.render('article', {
+                        article: article,
+                        viewToken: viewToken,
+                        articleList: articleList
+                    });
                 });
             });
         });

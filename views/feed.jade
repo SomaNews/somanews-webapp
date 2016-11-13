@@ -44,20 +44,10 @@ block content
                 h2 Weekly Issue
                 hr
 
+
         // Page Features
-        .row.text-center
-            ul.list-unstyled
-                each cluster in clusters
-                    li.col-md-3.col-sm-6.feed-body
-                        a(href='#{encodeURIComponent(cluster.leading._id)}')
-                            .thumbnail
-                                .ratio-4to3
-                                    .img-wrapper(style='background-image: url(#{cluster.leading.imageURL});')
-                                .caption
-                                    p #{cluster.leading.title}
-                                br
-                                .count
-                                    p 관련기사 #{cluster.count}건
+        block feedArticles
+            include articleList
 
         // /.row
         hr

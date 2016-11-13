@@ -5,29 +5,3 @@
 .news-body {
     margin-bottom: 30px;
 }
-
-.news-related {
-    margin-bottom: 60px;
-
-    .thumbnail {
-        position: relative;
-        height: auto;
-        overflow: hidden;
-
-        .img-wrapper {
-            position: absolute;
-            background-position: center;
-            background-size: cover;
-
-            width: 100%;
-            height: 100%;
-            overflow:hidden;
-        }
-
-        .caption {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            min-height: 5em;
-        }
-    }
-}

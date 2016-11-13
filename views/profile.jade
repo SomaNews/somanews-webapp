@@ -13,27 +13,8 @@ block content
                         graphFrequencies(!{JSON.stringify(logdataGraph)})
 
         // 괸심 뉴스들
-        if userLikes
-            .news-related
-                .row
-                    .col-lg-12
-                        h3 What you likes
-                // /.row
-                // Page Features
-                ul.list-unstyled
-                    .row.text-center
-                        each related in userLikes
-                            li.col-md-4.col-sm-6.hero-feature
-                                a(href='#{encodeURIComponent(related._id)}')
-                                    .thumbnail
-                                        .ratio-4to3
-                                            if(related.imageURL)
-                                                .img-wrapper(style='background-image: url(#{related.imageURL});')
-                                            else
-                                                .img-wrapper(style='background-image: url(http://placehold.it/800x500);')
-                                        .caption
-                                            p #{related.title}
-
+        block userLikes
+            include articleList
 
         // 로그 리스트
         .row

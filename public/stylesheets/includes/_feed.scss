@@ -24,7 +24,7 @@
     }
 }
 
-.feed-body {
+.list-article {
     margin-bottom: 30px;
 
     .thumbnail {
@@ -45,7 +45,13 @@
         .caption {
             overflow: hidden;
             text-overflow: ellipsis;
-            min-height: 5em;
+            height: 5em;
+
+            .providerIcon {
+                width: 1.1em;
+                height: 1.1em;
+                margin-right: .5em;
+            }
         }
     }
 }

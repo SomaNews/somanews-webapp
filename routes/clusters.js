@@ -20,7 +20,11 @@ router.get('/feed',
             if (err) {
                 return res.send(err);
             }
-            res.render('feed', {clusters: clusters});
+            var articleList = {
+                title: '관심있어하실만한 뉴스',
+                articles: clusters.map((cluster) => cluster.leading)
+            };
+            res.render('feed', {articleList: articleList});
         });
     });
 
@@ -58,10 +62,11 @@ router.get('/:id',
                 cluster: rawArticle.cluster,
                 content: utils.htmlEscapeMultilineText(rawArticle.content)
             };
-            article.related = cluster.articles.map(function (result) {
-                result.content = utils.htmlEscapeMultilineText(result.content);
-                return result;
-            });
+
+            var articleList = {
+                title: 'Related',
+                articles: cluster.articles
+            };
 
             Log.logArticleEnter(req.user._id, articleID, function (err, viewToken) {
                 if (err) {

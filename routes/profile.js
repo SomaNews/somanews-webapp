@@ -44,10 +44,13 @@ router.get('/profile',
                 return a.add(b);
             });
 
-        var userLikes = null;
+        var userLikes = {
+            title: '좋아하실만한 뉴스',
+            articles: []
+        };
         if (vsum) {
             Article.findRelatedArticles(vsum, (err, data) => {
-                if(!err) userLikes = data;
+                if(!err) userLikes.articles = data;
                 render();
             });
         }
@@ -58,7 +61,7 @@ router.get('/profile',
         function render() {
             res.render('profile', {
                 logs: logs,
-                userLikes: userLikes,
+                articleList: userLikes,
                 logdataGraph: categoryFrequencyData
             });
         }

@@ -4,7 +4,8 @@ var passport = require('passport');
 
 var UserSchema = new mongoose.Schema({
     email: {type: String, unique: true, required: true},
-    passwordHash: {type: String, required: true}
+    passwordHash: {type: String, required: true},
+    vector: {type: Array}
 });
 
 var User = mongoose.model('User', UserSchema);
