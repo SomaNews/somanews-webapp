@@ -18,8 +18,8 @@ exports.selectCollection = function (clusterType, callback) {
         if (err) return callback(err);
 
         if(clusterType == 'A') {
-            articleDB = db.collection('aarticles');
-            clusterDB = db.collection('aclusters');
+            articleDB = db.collection('articles');
+            clusterDB = db.collection('clusters');
         }
         else {
             articleDB = db.collection('barticles');
