@@ -30,7 +30,7 @@ block content
                 img.img-responsive.center-block(src='#{article.imageURL}', alt='')
                 hr
             // Post Content
-            p.lead!= article.content
+            p.lead!= htmlEscapeMultilineText(article.content)
 
             hr
 
