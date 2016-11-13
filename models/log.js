@@ -80,6 +80,7 @@ exports.getUserLog = function (userID, start, count, callback) {
     }
 
     Log.aggregate([
+        { $match: {user: new mongoose.Types.ObjectId(userID)} },
         { $sort: { startedAt: -1 } },
         { $skip: start }, { $limit: count },
         { $lookup: {

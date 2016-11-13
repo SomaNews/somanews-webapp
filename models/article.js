@@ -102,11 +102,8 @@ exports.findRelatedArticles = function (seedArticle, callback) {
         return;
     }
 
-    console.log('Finding similar articles with ' + seedArticle._id);
-    var seedVector = (seedArticle instanceof Article) ? seedArticle.vector : seedArticle;
-    console.log('Seed vector size : ' + seedVector.length);
+    var seedVector = seedArticle.vector || seedArticle;
     var labels = knearest.findSimilarVectorIndexes(seedVector, 10);
-    console.log('Articles : ' + labels);
     Article.find({
             _id: {
                 $ne: (seedArticle instanceof Article) ? seedArticle._id : undefined,
