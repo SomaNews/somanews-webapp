@@ -1,4 +1,4 @@
-.list-article {
+.list-article-tiled {
   margin-bottom: 30px;
 
   .thumbnail {
@@ -20,6 +20,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       height: 6em;
+      color: #111;
 
       .providerIcon {
         width: 1.1em;
@@ -31,5 +32,50 @@
     .time {
       color: #777;
     }
+  }
+}
+
+.list-article-list {
+  margin-bottom: 30px;
+
+  li {
+    display: block;
+    position: relative;
+    height: auto;
+    overflow: hidden;
+
+    .img-wrapper {
+      position: absolute;
+      background-position: center;
+      background-size: cover;
+
+      width: 100%;
+      height: 100%;
+      overflow:hidden;
+    }
+
+    .caption {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #444;
+
+      .providerIcon {
+        width: 1.1em;
+        height: 1.1em;
+        margin-right: .5em;
+      }
+
+      p {
+        margin-bottom: auto;
+      }
+    }
+
+    .time {
+      color: #777;
+    }
+  }
+
+  li:hover {
+    background-color: #ffedca;
   }
 }

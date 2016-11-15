@@ -99,7 +99,7 @@ exports.findRelatedArticles = function (colls, seedArticle, callback) {
                 $in: labels
             }
         }
-    ).limit(9).toArray(callback);
+    ).limit(15).toArray(callback);
 };
 
 

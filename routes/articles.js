@@ -67,7 +67,7 @@ router.get('/:id',
             },
             (related, callback) => {
                 articleList = {
-                    title: 'Related',
+                    title: '관련 기사들',
                     articles: related
                 };
                 Log.logArticleEnter(req.user._id, articleID, callback);
