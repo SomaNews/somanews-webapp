@@ -96,6 +96,21 @@ exports.getUserLog = function (colls, userID, start, count, callback) {
 
 
 /**
+ * Get articles user have read
+ * @param colls - Article collections
+ * @param userID - 유저 아이디
+ * @param callback - callback(err, articleIDs)
+ */
+exports.getUserReadArticles = function (colls, userID, callback) {
+    "use strict";
+
+    dbconn.getCollection('logs', (err, coll) => {
+        if (err) return callback(err);
+        coll.distinct('article', {user: userID}, callback);
+    });
+};
+
+/**
  * 사용자가 많이 본 클러스터를 찾습니다
  * @param colls - Article collections
  * @param userID - 유저 아이디
@@ -104,11 +119,10 @@ exports.getUserLog = function (colls, userID, start, count, callback) {
 exports.getUserFavoriteClusters = function (colls, userID, callback) {
     "use strict";
 
-
     dbconn.getCollection('logs', (err, coll) => {
         if (err) return callback(err);
         coll.aggregate([
-            {$match: {user: new mongodb.ObjectId(userID)}},
+            {$match: {user: userID}},
             {$sort: {startedAt: -1}},
             {$limit: 100},  // Count only up to 100 articles
             {
