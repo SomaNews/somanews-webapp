@@ -14,7 +14,7 @@ router.get('/profile',
     login.checkAuth, (req, res) => {
         "use strict";
 
-        var categoryFrequencyData, userLikes;
+        var categoryFrequencyData;
         var logs;
         async.waterfall([
             function (callback) {
@@ -38,33 +38,8 @@ router.get('/profile',
 
                 categoryFrequencyData = utils.makePieGraphData(logs, 'cate');
 
-                // Get closest vector
-                var vsum = logs
-                    .map((a) => a.article.vector)
-                    .reduce((a, b) => {
-                        if (!b) return a;
-                        if (!a) return b;
-                        return a.add(b);
-                    });
-
-                userLikes = {
-                    title: '좋아하실만한 뉴스',
-                    articles: []
-                };
-
-                if (vsum) {
-                    return Article.findRelatedArticles(req.colls, vsum, 15, (err, data) => {
-                        if (!err) userLikes.articles = data;
-                        callback(null);
-                    });
-                }
-                else callback(null);
-            },
-
-            function (callback) {
                 res.render('profile', {
                     logs: logs,
-                    articleList: userLikes,
                     logdataGraph: categoryFrequencyData
                 });
                 callback(null);
