@@ -15,20 +15,17 @@ function addDays(date, days) {
 router.get('/', function (req, res) {
     'use strict';
     var minimumDate = addDays(new Date(), -100);
-    articles.selectCollection(req.session.clusterType, (err, colls) => {
-        if (err) return next(err);
-        colls.articleDB.aggregate([
-            {$match: {publishedAt: {$gte: minimumDate}}},
-            {$project: {ymd: {$dateToString: {format: "%Y-%m-%d", date: "$publishedAt"}}}},
-            {$group: {'_id': "$ymd", count: {$sum: 1}}},
-            {$sort: {"_id": 1}}
-        ], function (err, result) {
-            if (err) {
-                return res.send(err);
-            }
-            console.log(result);
-            res.render('newsGraph', {'countList': result});
-        });
+    req.colls.articleDB.aggregate([
+        {$match: {publishedAt: {$gte: minimumDate}}},
+        {$project: {ymd: {$dateToString: {format: "%Y-%m-%d", date: "$publishedAt"}}}},
+        {$group: {'_id': "$ymd", count: {$sum: 1}}},
+        {$sort: {"_id": 1}}
+    ], function (err, result) {
+        if (err) {
+            return res.send(err);
+        }
+        console.log(result);
+        res.render('newsGraph', {'countList': result});
     });
 });
 

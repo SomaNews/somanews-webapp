@@ -1,6 +1,7 @@
 var mongodb = require('mongodb');
 var dbconn = require('../utils/dbConnector');
 var async = require('async');
+var Log = require('./log');
 
 /**
  * Select article collection based on clusterType
@@ -11,27 +12,37 @@ var async = require('async');
 exports.selectCollection = function (clusterType, callback) {
     "use strict";
 
+    var articleDBname, clusterDBname;
     var articleDB, clusterDB;
+    var readArticles;
 
-    dbconn.getDB((err, db) => {
-        if (err) return callback(err);
+    async.waterfall([
+        // Get main DB
+        (cb) => {
+            dbconn.getDB(cb);
+        },
 
-        var articleDBname, clusterDBname;
+        // Get articleDB and clusterDB
+        (db, cb) => {
 
+            if(clusterType == 'A') {
+                articleDBname = 'aarticles';
+                clusterDBname = 'aclusters';
+            }
+            else {
+                articleDBname = 'barticles';
+                clusterDBname = 'bclusters';
+            }
 
-        if(clusterType == 'A') {
-            articleDBname = 'aarticles';
-            clusterDBname = 'aclusters';
-        }
-        else {
-            articleDBname = 'barticles';
-            clusterDBname = 'bclusters';
-        }
+            articleDB = db.collection(articleDBname);
+            clusterDB = db.collection(clusterDBname);
 
-        articleDB = db.collection(articleDBname);
-        clusterDB = db.collection(clusterDBname);
-
-        Promise.all([articleDB, clusterDB]).then((values) => {
+            Promise.all([articleDB, clusterDB]).then(
+                (values) => cb(null, values),
+                (err) => cb(err)
+            );
+        },
+        (values, cb) => {
             callback(null, {
                 clusterType: clusterType,
                 articleDB: values[0],
@@ -39,9 +50,10 @@ exports.selectCollection = function (clusterType, callback) {
                 clusterDB: values[1],
                 clusterDBName: clusterDBname
             });
-        }, (err) => {
-            callback(err);
-        });
+            cb(null);
+        }
+    ], (err) => {
+        if (err) callback(err);
     });
 };
 
