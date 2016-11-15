@@ -1,31 +1,16 @@
 /*global $, window */
 
-var leftFlagSent = false;
-function sendLeftFlag() {
-    'use strict';
-
-    if (leftFlagSent) {
-        return;
-    }
-
-    var viewToken = $('#viewToken').val();
-    $.ajax({
-        type: 'POST',
-        async: false,
-        data: {viewToken: viewToken},
-        url: '/articles/articleLeave',
-        success: function () {
-            leftFlagSent = true;
-        }
-    });
-}
-
-$(window).on('unload', function () {
-    'use strict';
-    sendLeftFlag();
-});
-
-$(window).on('beforeunload', function () {
-    'use strict';
-    sendLeftFlag();
+$(document).ready(function() {
+    "use strict";
+    // Ping every 10 seconds
+    setInterval(function(){
+        var viewToken = $('#viewToken').val();
+        $.ajax({
+            type: 'POST',
+            async: true,
+            data: {viewToken: viewToken},
+            url: '/articles/articlePing',
+            success: function () {}
+        });
+    }, 10000);
 });

@@ -82,10 +82,14 @@ exports.findRelatedArticles = function (colls, seedArticle, count, callback) {
         return callback(new Error('Not implemented'));
     }
 
+    // This article itself is not related!
+    var excludes = (colls.readArticles || []).slice(0);
+    excludes.push(seedArticle._id);
+
     // Find cluster and return articles there
     colls.articleDB
         .find({
-            _id: {$nin: colls.readArticles},
+            _id: {$nin: excludes},
             cluster: seedArticle.cluster
         }, {content: 0})  // 같은 클러스터의 뉴스들. 컨텐츠는 제거한다.
         .sort({publishedAt: -1})  // 최신 뉴스부
@@ -105,8 +109,8 @@ exports.findRelatedArticles = function (colls, seedArticle, count, callback) {
 exports.listNewestNewsPerCluster = function (colls, clusterCount, callback) {
     'use strict';
 
-    // Get nearset cluster
     async.waterfall([
+        // Find when clustering had happened most recently
         (cb) => {
             colls.clusterDB.find().sort({clusteredAt: -1}).limit(1).next(cb);
         },
@@ -114,6 +118,8 @@ exports.listNewestNewsPerCluster = function (colls, clusterCount, callback) {
             if (!ret) {
                 return callback(new Error('No cluster data!'));
             }
+
+            // Get clusters
             colls.clusterDB.find({clusteredAt: {$gte: ret.clusteredAt}}, {'articles.content': 0})
                 .sort({ntc: -1}).limit(clusterCount).toArray(cb);
         },

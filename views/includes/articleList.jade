@@ -13,7 +13,7 @@ mixin articleList_Tiled(title, articles)
                 each article in articles
                     li.col-md-4.col-sm-6.hero-feature
                         .thumbnail
-                            a(href='#{encodeURIComponent(article._id)}')
+                            a(href='/articles/#{encodeURIComponent(article._id)}')
                                 .ratio-4to3
                                     if(article.imageURL)
                                         .img-wrapper(style='background-image: url(#{article.imageURL});')
@@ -35,7 +35,7 @@ mixin articleList_List(title, articles)
 
         ul.list-unstyled
             each article in articles
-                a(href='#{encodeURIComponent(article._id)}')
+                a(href='/articles/#{encodeURIComponent(article._id)}')
                     li
                         .caption
                             p

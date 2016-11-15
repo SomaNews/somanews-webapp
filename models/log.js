@@ -16,16 +16,51 @@ exports.logArticleEnter = function (userID, articleID, callback) {
     dbconn.getCollection('logs', (err, coll) => {
         if (err) return callback(err);
 
-        coll.insertOne({
-            user: userID,
-            article: articleID,
-            startedAt: new Date()
-        }, function (err, startLog) {
-            if (err) {
-                return callback(err, null);
+        var currentTime = new Date();
+
+        // Log shouldn't be updated by refreshing.
+        // If last log also directs to current article, then re-use last log.
+        var cursor = coll.find({user: userID})
+            .sort({startedAt: -1})
+            .limit(1);
+
+        // First check if we have at least one user log.
+        cursor.hasNext((err, yes) => {
+            if (err) return callback(err);
+            if (yes) {
+                // Check if last log's article is equal to articleID
+                return cursor.next((err, doc) => {
+                    if (doc.article == articleID) {
+                        console.log('re-updating ' + doc._id);
+                        // update that article and return it again.
+                        return coll.update(
+                            {_id: new mongodb.ObjectID(doc._id)},
+                            { $set: {endedAt: currentTime} },
+                            (err, _) => {
+                                if (err) return callback(err);
+                                callback(null, doc._id);
+                            }
+                        );
+                    }
+                    inserter();
+                });
             }
-            callback(null, startLog.insertedId);
+            inserter();
         });
+
+        function inserter() {
+            coll.insertOne({
+                user: userID,
+                article: articleID,
+                startedAt: currentTime,
+                endedAt: currentTime
+            }, function (err, startLog) {
+                if (err) {
+                    return callback(err, null);
+                }
+                callback(null, startLog.insertedId);
+            });
+        }
     });
 };
 
@@ -35,7 +70,7 @@ exports.logArticleEnter = function (userID, articleID, callback) {
  * @param callback - callback(err)
  */
 
-exports.logArticleLeave = function (viewToken, callback) {
+exports.logArticlePing = function (viewToken, callback) {
     'use strict';
 
     dbconn.getCollection('logs', (err, coll) => {

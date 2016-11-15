@@ -90,7 +90,7 @@ router.get('/:id',
 
 
 // 뉴스를 다보고 다음 뉴스로 넘어가거나, 종료할 떄, 뉴스를 다보았다는 로그 수집
-router.post('/articleLeave',
+router.post('/articlePing',
     function (req, res) {
         'use strict';
 
@@ -99,7 +99,7 @@ router.post('/articleLeave',
             return res.status(500).send(new Error("Invalid parameters"));
         }
 
-        Log.logArticleLeave(req.body.viewToken, function (err) {
+        Log.logArticlePing(req.body.viewToken, function (err) {
             if (err) {
                 return res.status(500).send(err);
             }

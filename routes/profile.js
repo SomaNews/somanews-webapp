@@ -1,9 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var vectorious = require('vectorious'),
-    Vector = vectorious.Vector;
 
-var Article = require('../models/article');
 var Log = require('../models/log');
 var login = require('./login');
 var utils = require('../utils/utils');
@@ -15,27 +12,12 @@ router.get('/profile',
         "use strict";
 
         var categoryFrequencyData;
-        var logs;
         async.waterfall([
             function (callback) {
                 Log.getUserLog(req.colls, req.user._id, 0, 100, callback);
             },
-            function (rawlogs, callback) {
-                // Get 'cleaned' categories.
-                logs = rawlogs.map(function (entry) {
-                    return {
-                        cate: entry.article.cate,
-                        startedAt: entry.startedAt,
-                        article: {
-                            title: entry.article.title,
-                            cate: entry.article.cate,
-                            cluster: entry.article.cluster,
-                            url: '/articles/' + encodeURIComponent(entry.article._id),
-                            vector: new Vector(entry.article.vector)
-                        }
-                    };
-                });
-
+            function (logs, callback) {
+                logs.forEach((e) => { e.cate = e.article.cate; });
                 categoryFrequencyData = utils.makePieGraphData(logs, 'cate');
 
                 res.render('profile', {
