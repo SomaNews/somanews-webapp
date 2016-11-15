@@ -111,31 +111,9 @@ exports.findRelatedArticles = function (colls, seedArticle, callback) {
 exports.listNewestNewsPerCluster = function (colls, callback) {
     'use strict';
 
-    colls.articleDB.aggregate([
-        { $sort : { "publishedAt": -1 } },
-        { $match : { "imageURL": {$ne: ""} } },
-        { $group : {
-            '_id': "$cluster",
-            count: {$sum: 1},
-            clusters: {$push: "$$ROOT"}
-        }},
-        { $project : {
-            count: 1,
-            clusters: { $slice: ["$clusters", 0, 1] }
-        } }
-    ], function (err, groups) {
-        if (err) {
-            return callback(err, null);
-        }
+    colls.clusterDB
+        .find({}, {leading: 1, ntc: 1})
+        .sort({ "ntc": -1 })
+        .limit(12).toArray(callback);
 
-        var clusters = [];
-        for(var i = 0 ; i < groups.length ; i++) {
-            var group = groups[i];
-            clusters[i] = {
-                leading: group.clusters[0],
-                count: group.count,
-            };
-        }
-        return callback(null, clusters);
-    });
 };
