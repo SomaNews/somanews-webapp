@@ -53,7 +53,7 @@ router.get('/profile',
                 };
 
                 if (vsum) {
-                    return Article.findRelatedArticles(req.colls, vsum, (err, data) => {
+                    return Article.findRelatedArticles(req.colls, vsum, 15, (err, data) => {
                         if (!err) userLikes.articles = data;
                         callback(null);
                     });
