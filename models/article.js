@@ -2,6 +2,7 @@ var knearest = require('../utils/knearest');
 
 var mongodb = require('mongodb');
 var dbconn = require('../utils/dbConnector');
+var async = require('async');
 
 /**
  * Select article collection based on clusterType
@@ -111,9 +112,24 @@ exports.findRelatedArticles = function (colls, seedArticle, callback) {
 exports.listNewestNewsPerCluster = function (colls, callback) {
     'use strict';
 
-    colls.clusterDB
-        .find({}, {leading: 1, ntc: 1})
-        .sort({ "ntc": -1 })
-        .limit(12).toArray(callback);
-
+    // Get nearset cluster
+    async.waterfall([
+        (cb) => {
+            colls.clusterDB.find().sort({clusteredAt: -1}).limit(1).next(cb);
+        },
+        (ret, cb) => {
+            if (!ret) {
+                return callback(new Error('No cluster data!'));
+            }
+            colls.clusterDB.find({clusteredAt: {$gte: ret.clusteredAt}}, {leading: 1})
+                .sort({ntc: -1}).limit(24).toArray(cb);
+        },
+        (data, cb) => {
+            callback(null, data);
+            cb(null);
+        }
+    ], (err) => {
+        if (err) callback(err);
+    });
 };
+
