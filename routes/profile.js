@@ -45,8 +45,6 @@ router.get('/profile',
                 callback(null);
             }
         ], (err) => {
-            Log.getUserFavoriteClusters(req.colls, req.user._id, (err, ret) => {console.log(ret);});
-
             if (err) {
                 res.render('error', {error: err});
             }

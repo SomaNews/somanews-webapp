@@ -1,7 +1,6 @@
 var mongodb = require('mongodb');
 var dbconn = require('../utils/dbConnector');
 var async = require('async');
-var Log = require('./log');
 
 /**
  * Select article collection based on clusterType
@@ -14,7 +13,6 @@ exports.selectCollection = function (clusterType, callback) {
 
     var articleDBname, clusterDBname;
     var articleDB, clusterDB;
-    var readArticles;
 
     async.waterfall([
         // Get main DB
@@ -24,7 +22,6 @@ exports.selectCollection = function (clusterType, callback) {
 
         // Get articleDB and clusterDB
         (db, cb) => {
-
             if(clusterType == 'A') {
                 articleDBname = 'aarticles';
                 clusterDBname = 'aclusters';
@@ -87,8 +84,11 @@ exports.findRelatedArticles = function (colls, seedArticle, count, callback) {
 
     // Find cluster and return articles there
     colls.articleDB
-        .find({cluster: seedArticle.cluster}, {content: 0})  // 같은 클러스터의 뉴스들. 컨텐츠는 제거한다.
-        .sort({publishedAt: -1})  // publsh
+        .find({
+            _id: {$nin: colls.readArticles},
+            cluster: seedArticle.cluster
+        }, {content: 0})  // 같은 클러스터의 뉴스들. 컨텐츠는 제거한다.
+        .sort({publishedAt: -1})  // 최신 뉴스부
         .limit(count)
         .toArray(callback);
 };
@@ -114,7 +114,7 @@ exports.listNewestNewsPerCluster = function (colls, clusterCount, callback) {
             if (!ret) {
                 return callback(new Error('No cluster data!'));
             }
-            colls.clusterDB.find({clusteredAt: {$gte: ret.clusteredAt}}, {leading: 1})
+            colls.clusterDB.find({clusteredAt: {$gte: ret.clusteredAt}}, {'articles.content': 0})
                 .sort({ntc: -1}).limit(clusterCount).toArray(cb);
         },
         (data, cb) => {

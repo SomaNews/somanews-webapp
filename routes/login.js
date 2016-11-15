@@ -5,6 +5,7 @@
 var express = require('express');
 var passport = require('passport');
 var User = require('../models/user');
+var Log = require('../models/log');
 
 exports = module.exports = function (router) {
     'use strict';
@@ -63,7 +64,11 @@ exports = module.exports = function (router) {
 exports.checkAuth = function (req, res, next) {
     'use strict';
     if (req.user) {
-        return next();
+        return Log.getUserReadArticles(req.colls, req.user._id, (err, readArticles) => {
+            if (err) return next(err);
+            req.colls.readArticles = readArticles;
+            return next();
+        });
     }
 
     // Render login page instead
