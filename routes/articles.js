@@ -33,7 +33,7 @@ router.get('/feed',
         'use strict';
 
         // 각 클러스터마다 해당 클러스터에 포함된 뉴스들과 뉴스 갯수를 얻는다.
-        Article.listNewestNewsPerCluster(req.colls, function (err, clusters) {
+        Article.listNewestNewsPerCluster(req.colls, 24, function (err, clusters) {
             if (err) {
                 return res.send(err);
             }
@@ -45,6 +45,7 @@ router.get('/feed',
             res.render('feed', {articleList: articleList});
         });
     });
+
 
 // 각 뉴스마다
 router.get('/:id',
@@ -63,7 +64,7 @@ router.get('/:id',
             (ret, callback) => {
                 if (!ret) return callback(new Error('Unknown news ' + articleID));
                 article = ret;
-                Article.findRelatedArticles(req.colls, article, callback);
+                Article.findRelatedArticles(req.colls, article, 15, callback);
             },
             (related, callback) => {
                 articleList = {
@@ -100,7 +101,6 @@ router.post('/articleLeave',
 
         Log.logArticleLeave(req.body.viewToken, function (err) {
             if (err) {
-                console.log(err.messsage);
                 return res.status(500).send(err);
             }
             return res.json({success: 1});

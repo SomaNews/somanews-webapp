@@ -1,5 +1,3 @@
-var knearest = require('../utils/knearest');
-
 var mongodb = require('mongodb');
 var dbconn = require('../utils/dbConnector');
 var async = require('async');
@@ -35,6 +33,7 @@ exports.selectCollection = function (clusterType, callback) {
 
         Promise.all([articleDB, clusterDB]).then((values) => {
             callback(null, {
+                clusterType: clusterType,
                 articleDB: values[0],
                 articleDBName: articleDBname,
                 clusterDB: values[1],
@@ -63,53 +62,35 @@ exports.getArticle = function (colls, id, callback) {
  * Find up to 9 articles related to specific article
  * @param colls - Collection being used
  * @param seedArticle - Article to search from, or Vector
+ * @param count - Number of articles to get
  * @param callback - callback (err, articles)
  */
-exports.findRelatedArticles = function (colls, seedArticle, callback) {
-    'use strict';
+exports.findRelatedArticles = function (colls, seedArticle, count, callback) {
+    "use strict";
 
-    if(!knearest.isVectorLoaded()) {
-        // Retry after vector load
-        console.log('Loading vectors...');
-        colls.articleDB.find({}, {'vector': 1}).toArray(function (err, articles) {
-            if (err) {
-                return callback(new Error('Vector loading failed'));
-            }
-
-            var labels = [], vectors = [];
-            for(var i = 0 ; i < articles.length ; i++) {
-                labels.push(articles[i]._id);
-                vectors.push(articles[i].vector);
-            }
-            console.log('Number of articles : ' + labels.length);
-            knearest.loadVectors(labels, vectors);
-
-            // Retry!
-            exports.findRelatedArticles(colls, seedArticle, callback);
-        });
-        return;
+    // Vector input is not yet implemented
+    if(seedArticle._id === undefined) {
+        return callback(new Error('Not implemented'));
     }
 
-    var seedVector = seedArticle.vector || seedArticle;
-    var labels = knearest.findSimilarVectorIndexes(seedVector, 10);
-    colls.articleDB.find(
-        {
-            '_id': {
-                $ne: seedArticle._id || undefined,
-                $in: labels
-            }
-        }
-    ).limit(15).toArray(callback);
+    // Find cluster and return articles there
+    colls.articleDB
+        .find({cluster: seedArticle.cluster}, {content: 0})  // 같은 클러스터의 뉴스들. 컨텐츠는 제거한다.
+        .sort({publishedAt: -1})  // publsh
+        .limit(count)
+        .toArray(callback);
 };
+
 
 
 /**
  * Find most recent news per cluster
  *
  * @param colls - Collection being used
+ * @param clusterCount - Number of clusters to get
  * @param callback - callback(err, articles)
  */
-exports.listNewestNewsPerCluster = function (colls, callback) {
+exports.listNewestNewsPerCluster = function (colls, clusterCount, callback) {
     'use strict';
 
     // Get nearset cluster
@@ -122,7 +103,7 @@ exports.listNewestNewsPerCluster = function (colls, callback) {
                 return callback(new Error('No cluster data!'));
             }
             colls.clusterDB.find({clusteredAt: {$gte: ret.clusteredAt}}, {leading: 1})
-                .sort({ntc: -1}).limit(24).toArray(cb);
+                .sort({ntc: -1}).limit(clusterCount).toArray(cb);
         },
         (data, cb) => {
             callback(null, data);
