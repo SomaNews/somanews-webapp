@@ -33,7 +33,7 @@ router.get('/profile',
             }
         ], (err) => {
             if (err) {
-                res.render('error', {error: err});
+                res.render('site/error', {error: err});
             }
         });
     });
