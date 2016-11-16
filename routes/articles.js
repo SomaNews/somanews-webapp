@@ -47,6 +47,24 @@ router.get('/feed',
     });
 
 
+router.get('/list',
+    login.checkAuth,
+    (req, res) => {
+        "use strict";
+        async.waterfall([
+            (cb) => {
+                Article.listArticles(req.colls, 0, 100, cb);
+            },
+            (articles, cb) => {
+                res.render('articleList', {
+                    articles: articles
+                });
+                cb(null);
+            }
+        ]);
+    }
+);
+
 // 각 뉴스마다
 router.get('/:id',
     login.checkAuth,

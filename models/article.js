@@ -68,6 +68,21 @@ exports.getArticle = function (colls, id, callback) {
 
 
 /**
+ * List articles in time order
+ * @param colls - Collections being used
+ * @param start - (Paging) How many to skip
+ * @param count - (Paging) How many to fetch
+ * @param callback - callback (err, articles)
+ */
+exports.listArticles = function (colls, start, count, callback) {
+    "use strict";
+    colls.articleDB.find({}, {content: 0})
+        .sort({'publishedAt': -1, '_id': -1})
+        .skip(start).limit(count).toArray(callback);
+};
+
+
+/**
  * Find up to 9 articles related to specific article
  * @param colls - Collection being used
  * @param seedArticle - Article to search from, or Vector
