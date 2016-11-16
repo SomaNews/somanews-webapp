@@ -25,7 +25,7 @@ router.get('/', function (req, res) {
             return res.send(err);
         }
         console.log(result);
-        res.render('newsGraph', {'countList': result});
+        res.render('admin/newsGraph', {'countList': result});
     });
 });
 

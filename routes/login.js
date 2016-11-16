@@ -39,7 +39,7 @@ exports = module.exports = function (router) {
 
     // Join page
     router.get('/join', function (req, res) {
-        res.render('join');
+        res.render('admin/join');
     });
 
     router.post('/join', function (req, res) {
@@ -72,5 +72,5 @@ exports.checkAuth = function (req, res, next) {
     }
 
     // Render login page instead
-    return res.render('login');
+    return res.render('site/login');
 };
