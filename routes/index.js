@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', function (req, res) {
     'use strict';
 
-    res.render('index');
+    res.render('site/index');
 });
 
 require('./login')(router);
