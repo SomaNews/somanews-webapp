@@ -11,18 +11,23 @@ router.get('/profile',
     login.checkAuth, (req, res) => {
         "use strict";
 
-        var categoryFrequencyData;
         async.waterfall([
             function (callback) {
                 Log.getUserLog(req.colls, req.user._id, 0, 100, callback);
             },
             function (logs, callback) {
-                logs.forEach((e) => { e.cate = e.article.cate; });
-                categoryFrequencyData = utils.makePieGraphData(logs, 'cate');
+                logs.forEach((e) => {
+                    e.cate = e.article.cate;
+                    e.cluster = e.article.cluster;
+                });
+
+                var categoryFrequencyData = utils.makePieGraphData(logs, 'cate');
+                var clusterFrequencyData = utils.makePieGraphData(logs, 'cluster');
 
                 res.render('profile', {
                     logs: logs,
-                    logdataGraph: categoryFrequencyData
+                    categoryFrequencyData: categoryFrequencyData,
+                    clusterFrequencyData: clusterFrequencyData
                 });
                 callback(null);
             }

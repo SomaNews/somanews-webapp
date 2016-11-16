@@ -6,8 +6,9 @@
  * Graph frequencies with given data
  * @param data - Data with labels and series.
  */
-function graphFrequencies(data) {
+function graphFrequencies(className, data) {
     "use strict";
+
     var freqsum = data.series.reduce(function (a, b) { return a + b; }, 0);
     if (freqsum === 0) {
         console.warn('Cannot graph data with nothing');
@@ -20,7 +21,7 @@ function graphFrequencies(data) {
         return originalLabel + " (" + percent + "%)";
     };
 
-    new Chartist.Pie('.ct-chart', data, {
+    new Chartist.Pie(className, data, {
         chartPadding: 30,
         labelOffset: 60,
         labelDirection: 'explode',

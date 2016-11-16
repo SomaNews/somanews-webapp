@@ -5,12 +5,19 @@ extends layout
 
 block content
     .container
+        h1 유저 프로필
         // 로그 그래프
         .row
-            .col-xs-6.col-xs-offset-3
-                .ct-chart.ct-perfect-fourth
+            .col-xs-5
+                .ct-category-chart.ct-perfect-fourth
+                    h3 카테고리별 차트
                     script.
-                        graphFrequencies(!{JSON.stringify(logdataGraph)})
+                        graphFrequencies('.ct-category-chart', !{JSON.stringify(categoryFrequencyData)})
+            .col-xs-5.col-xs-offset-2
+                .ct-cluster-chart.ct-perfect-fourth
+                    h3 클러스터별 차트
+                    script.
+                        graphFrequencies('.ct-cluster-chart', !{JSON.stringify(clusterFrequencyData)})
 
         // 괸심 뉴스들
         block userLikes
