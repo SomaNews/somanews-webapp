@@ -35,8 +35,8 @@ mixin articleList_List(title, articles)
 
         ul.list-unstyled
             each article in articles
-                a(href='/articles/#{encodeURIComponent(article._id)}')
-                    li
+                li
+                    a(href='/articles/#{encodeURIComponent(article._id)}')
                         .caption
                             p
                                 img.providerIcon(src='/images/providerIcons/#{article.provider}.ico')

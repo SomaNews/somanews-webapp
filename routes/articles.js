@@ -56,7 +56,7 @@ router.get('/list',
                 Article.listArticles(req.colls, 0, 100, cb);
             },
             (articles, cb) => {
-                res.render('articleList', {
+                res.render('admin/articleList', {
                     articles: articles
                 });
                 cb(null);
