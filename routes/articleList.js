@@ -33,16 +33,33 @@ router.get('/articleList',
 
             // Get category percentage
             (clusters, cb) => {
+                var clusterTable = {};
+                var totalClusterSum = utils.sum(clusters.map((cluster) => cluster.count));
+                clusters.forEach((cluster) => {
+                    clusterTable[cluster._id] = cluster.count /totalClusterSum;
+                });
+
                 var categoryCounts = utils.countAttributes(articles, 'cate');
                 var clusterCounts = utils.countAttributes(articles, 'cluster');
+                var articleCount = articles.length;
+
+
+                function getClusterScore(clusterID) {
+                    var logClusterRatio = (clusterTable[clusterID] || 0);
+                    var totalClusterRatio = (clusterCounts[clusterID] || 0) / articleCount;
+                    return (1 + 4 * logClusterRatio) / (1 + 1.5 * totalClusterRatio);
+                }
 
                 articles.forEach((article) => {
-                    if(article.title.length > 25) {
-                        article.title = article.title.substring(0, 25) + '...';
+                    if(article.title.length > 20) {
+                        article.title = article.title.substring(0, 20) + '...';
                     }
-                    article.categoryPercentage = (categoryCounts[article.cate] / articles.length * 100).toFixed(2);
-                    article.clusterPercentage = (clusterCounts[article.cluster] / articles.length * 100).toFixed(2);
+                    article.categoryPercentage = (categoryCounts[article.cate] / articleCount * 100).toFixed(2);
+                    article.clusterPercentage = (clusterCounts[article.cluster] / articleCount * 100).toFixed(2);
+                    article.clusterScore = getClusterScore(article.cluster);
                 });
+                articles.sort((a, b) => -(a.clusterScore - b.clusterScore));
+
                 res.render('admin/articleList', {
                     articles: articles
                 });

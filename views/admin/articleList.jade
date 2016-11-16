@@ -13,6 +13,7 @@ block content
                     th 시간
                     th 카테고리
                     th 클러스터
+                    th 클러스터점수
                 each article in articles
                     tr
                         td
@@ -21,3 +22,4 @@ block content
                         td= formatDate(article.publishedAt)
                         td #{article.cate} (#{article.categoryPercentage}%)
                         td #{article.cluster} (#{article.clusterPercentage}%)
+                        td= article.clusterScore.toFixed(5)
