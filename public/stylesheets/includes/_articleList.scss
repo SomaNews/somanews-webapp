@@ -60,12 +60,6 @@
       text-overflow: ellipsis;
       color: #444;
 
-      .providerIcon {
-        width: 1.1em;
-        height: 1.1em;
-        margin-right: .5em;
-      }
-
       p {
         margin-bottom: auto;
       }
@@ -83,4 +77,10 @@
   li:nth-child(even) {
     background: #f3f3f3;
   }
+}
+
+.providerIcon {
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: .5em;
 }

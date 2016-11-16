@@ -7,7 +7,6 @@ var utils = require('../utils/utils');
 var async = require('async');
 var Article = require('../models/article');
 
-
 // Index to feed
 router.get('/', (req, res) => { res.redirect('/articles/feed');});
 
@@ -45,25 +44,6 @@ router.get('/feed',
             res.render('feed', {articleList: articleList});
         });
     });
-
-
-router.get('/list',
-    login.checkAuth,
-    (req, res) => {
-        "use strict";
-        async.waterfall([
-            (cb) => {
-                Article.listArticles(req.colls, 0, 100, cb);
-            },
-            (articles, cb) => {
-                res.render('admin/articleList', {
-                    articles: articles
-                });
-                cb(null);
-            }
-        ]);
-    }
-);
 
 // 각 뉴스마다
 router.get('/:id',

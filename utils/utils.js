@@ -128,3 +128,10 @@ exports.makePieGraphData = function (entries, attrType) {
         series: items
     };
 };
+
+
+
+exports.sum = function (data) {
+    "use strict";
+    return data.reduce((a, b) => a + b, 0);
+};

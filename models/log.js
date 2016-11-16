@@ -175,6 +175,7 @@ exports.getUserFavoriteClusters = function (colls, userID, callback) {
                     count: {$sum: 1},
                 }
             },
+            {$sort: {count: -1}}
         ], callback);
     });
 };

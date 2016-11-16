@@ -7,4 +7,17 @@ block content
     // Page Content
     .container
         block articleList
-            +articleList_List('전체 뉴스 목록', articles)
+            table.table.table-bordered.table-striped.table-condensed
+                thead
+                    th 제목
+                    th 시간
+                    th 카테고리
+                    th 클러스터
+                each article in articles
+                    tr
+                        td
+                            img.providerIcon(src='/images/providerIcons/#{article.provider}.ico')
+                            | #{article.title}
+                        td= formatDate(article.publishedAt)
+                        td #{article.cate} (#{article.categoryPercentage}%)
+                        td #{article.cluster} (#{article.clusterPercentage}%)

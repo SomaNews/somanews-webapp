@@ -44,3 +44,24 @@ mixin articleList_List(title, articles)
                                 span.time.pull-right
                                     span.glyphicon.glyphicon-time
                                     | #{formatDate(article.publishedAt)}
+
+mixin articleList_List_Admin(title, articles)
+    .list-article-list
+        .row
+            .col-lg-12
+                h3= title
+
+        ul.list-unstyled
+            each article in articles
+                li
+                    a(href='/articles/#{encodeURIComponent(article._id)}')
+                        .caption
+                            p
+                                img.providerIcon(src='/images/providerIcons/#{article.provider}.ico')
+                                | #{article.title}
+                                span.time.pull-right
+                                    span.glyphicon.glyphicon-time
+                                    | #{formatDate(article.publishedAt)}
+                            p.col-xs-offset-1
+                                | #{article.cate} (#{article.categoryPercentage}%)
+                                | #{article.cluster} (#{article.clusterPercentage}%)

@@ -23,6 +23,7 @@ var routes = require('./routes/index');
 var users = require('./routes/profile');
 var articleModel = require('./models/article');
 var articles = require('./routes/articles');
+var articleList = require('./routes/articleList');
 var newsStat = require('./routes/newsStat');
 var login = require('./routes/login');
 
@@ -86,6 +87,7 @@ app.use((req, res, next) => {
 
 app.use('/', routes);
 app.use('/', users);
+app.use('/', articleList);
 app.use('/articles', articles);
 app.use('/newsStat', newsStat);
 
