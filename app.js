@@ -93,7 +93,7 @@ app.use('/newsStat', newsStat);
 app.use(function (req, res) {
     var err = new Error('Not Found');
     err.status = 404;
-    res.render('error', {error: err});
+    res.render('site/error', {error: err});
 });
 
 module.exports = app;
