@@ -33,29 +33,33 @@ router.get('/articleList',
 
             // Get category percentage
             (clusters, cb) => {
-                var clusterTable = {};
+                var clusterRatios = {};
                 var totalClusterSum = utils.sum(clusters.map((cluster) => cluster.count));
                 clusters.forEach((cluster) => {
-                    clusterTable[cluster._id] = cluster.count /totalClusterSum;
+                    clusterRatios[cluster._id] = cluster.count / totalClusterSum;
                 });
 
-                var categoryCounts = utils.countAttributes(articles, 'cate');
-                var clusterCounts = utils.countAttributes(articles, 'cluster');
-                var articleCount = articles.length;
+                var totalCategoryRatios = utils.normalizeAttributeCounts(utils.countAttributes(articles, 'cate'));
+                var totalClusterRatios = utils.normalizeAttributeCounts(utils.countAttributes(articles, 'cluster'));
 
 
                 function getClusterScore(clusterID) {
-                    var logClusterRatio = (clusterTable[clusterID] || 0);
-                    var totalClusterRatio = (clusterCounts[clusterID] || 0) / articleCount;
+                    var logClusterRatio = (clusterRatios[clusterID] || 0);
+                    var totalClusterRatio = (totalClusterRatios[clusterID] || 0);
                     return (1 + 4 * logClusterRatio) / (1 + 1.5 * totalClusterRatio);
                 }
 
                 articles.forEach((article) => {
                     if(article.title.length > 20) {
-                        article.title = article.title.substring(0, 20) + '...';
+                        article.shortTitle = article.title.substring(0, 20) + '...';
                     }
-                    article.categoryPercentage = (categoryCounts[article.cate] / articleCount * 100).toFixed(2);
-                    article.clusterPercentage = (clusterCounts[article.cluster] / articleCount * 100).toFixed(2);
+                    else {
+                        article.shortTitle = article.title;
+                    }
+                    article.categoryPercentage = (totalCategoryRatios[article.cate] * 100).toFixed(1);
+                    article.clusterPercentage = (totalClusterRatios[article.cluster] * 100).toFixed(1);
+                    article.logClusterRatio = (clusterRatios[article.cluster] || 0).toFixed(2);
+                    article.totalClusterRatio = (totalClusterRatios[article.cluster] || 0).toFixed(2);
                     article.clusterScore = getClusterScore(article.cluster);
                 });
                 articles.sort((a, b) => -(a.clusterScore - b.clusterScore));

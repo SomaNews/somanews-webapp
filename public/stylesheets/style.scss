@@ -39,7 +39,7 @@ a {
     -webkit-transition: all 0.35s;
     -moz-transition: all 0.35s;
     transition: all 0.35s;
-    color: #fdcc52;
+    color: #ed9521;
     &:hover, &:focus {
         color: #fcbd20;
     }
@@ -415,7 +415,7 @@ img {
 }
 
 body {
-    webkit-tap-highlight-color: #222222;
+    -webkit-tap-highlight-color: #222222;
 }
 
 body > .container {

@@ -87,6 +87,18 @@ function countAttributes(entries, attrType) {
 exports.countAttributes = countAttributes;
 
 
+exports.normalizeAttributeCounts = function (attrCounts) {
+    "use strict";
+    var s = 0;
+    Object.keys(attrCounts).forEach((k) => {
+        s += attrCounts[k];
+    });
+    Object.keys(attrCounts).forEach((k) => {
+        attrCounts[k] /= s;
+    });
+    return attrCounts;
+};
+
 /**
  * Sort attribute count data by counts.
  * @param attrCounts Count data from 'countAttributes'

@@ -13,13 +13,18 @@ block content
                     th 시간
                     th 카테고리
                     th 클러스터
+                    th logClusterR
+                    th totClusterR
                     th 클러스터점수
                 each article in articles
                     tr
                         td
-                            img.providerIcon(src='/images/providerIcons/#{article.provider}.ico')
-                            | #{article.title}
-                        td= formatDate(article.publishedAt)
+                            a(href='/articles/#{encodeURIComponent(article._id)}', title=article.title)
+                                img.providerIcon(src='/images/providerIcons/#{article.provider}.ico')
+                                | #{article.shortTitle}
+                            td= formatDate(article.publishedAt)
                         td #{article.cate} (#{article.categoryPercentage}%)
                         td #{article.cluster} (#{article.clusterPercentage}%)
+                        td= article.logClusterRatio
+                        td= article.totalClusterRatio
                         td= article.clusterScore.toFixed(5)
