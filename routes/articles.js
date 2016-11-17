@@ -14,13 +14,13 @@ router.get('/', (req, res) => { res.redirect('/articles/feed');});
 router.get('/modeA', (req, res) => {
     "use strict";
     req.session.clusterType = 'A';
-    res.redirect('/articles');
+    res.json({success: 1});
 });
 
 router.get('/modeB', (req, res) => {
     "use strict";
     req.session.clusterType = 'B';
-    res.redirect('/articles');
+    res.json({success: 1});
 });
 
 

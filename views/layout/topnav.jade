@@ -22,9 +22,9 @@ nav#mainNav.navbar.navbar-default.navbar-fixed-top
                     a.page-scroll(href='/#contact') Contact
                 if(request.user)
                     li(class=((request.session.clusterType === 'A') ? 'active' : ''))
-                        a.page-scroll(href='/articles/modeA') Page A
+                        a.page-scroll(href='#', onclick='javascript:setDatabaseType("A");') Page A
                     li(class=((request.session.clusterType === 'B') ? 'active' : ''))
-                        a.page-scroll(href='/articles/modeB') Page B
+                        a.page-scroll(href='#', onclick='javascript:setDatabaseType("B");') Page B
                     li
                         a.page-scroll(href='/profile') Profile
 
