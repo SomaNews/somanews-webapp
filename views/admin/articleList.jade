@@ -9,22 +9,28 @@ block content
         block articleList
             table.table.table-bordered.table-striped.table-condensed
                 thead
-                    th 제목
-                    th 시간
-                    th 카테고리
-                    th 클러스터
-                    th logClusterR
-                    th totClusterR
-                    th 클러스터점수
+                    tr
+                        th 제목
+                        th 시간
+                        th 카테고리
+                        th 클러스터
+                        th lCR
+                        th tCR
+                        th r
+                        th score
                 each article in articles
                     tr
                         td
                             a(href='/articles/#{encodeURIComponent(article._id)}', title=article.title)
                                 img.providerIcon(src='/images/providerIcons/#{article.provider}.ico')
                                 | #{article.shortTitle}
-                            td= formatDate(article.publishedAt)
+                        td= formatDate(article.publishedAt)
                         td #{article.cate} (#{article.categoryPercentage}%)
                         td #{article.cluster} (#{article.clusterPercentage}%)
                         td= article.logClusterRatio
                         td= article.totalClusterRatio
+                        td= article.rank
                         td= article.clusterScore.toFixed(5)
+
+    script.
+        $('table').floatThead();

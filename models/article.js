@@ -121,7 +121,7 @@ exports.findRelatedArticles = function (colls, seedArticle, count, callback) {
  * @param clusterCount - Number of clusters to get
  * @param callback - callback(err, articles)
  */
-exports.listNewestNewsPerCluster = function (colls, clusterCount, callback) {
+exports.listClusters = function (colls, clusterCount, callback) {
     'use strict';
 
     async.waterfall([

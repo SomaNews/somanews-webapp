@@ -16,31 +16,37 @@ router.get('/articleList',
     (req, res) => {
         "use strict";
 
-        var articles;
+        var allArticles;
+        var allClusters;
 
         async.waterfall([
             // Get articles
             (cb) => {
-                Article.listArticles(req.colls, 0, 100, cb);
+                async.parallel([
+                    (cb) => Article.listArticles(req.colls, 0, 100, cb),
+                    (cb) => Article.listClusters(req.colls, 99999, cb),
+                    (cb) => Log.getUserFavoriteClusters(req.colls, req.user._id, cb)
+                ], (err, results) => {
+                    if (err) return cb(err);
+                    allArticles = results[0];
+                    allClusters = {};
+                    results[1].forEach((cluster) => {
+                        allClusters[cluster.cluster] = cluster;
+                    });
+                    cb(null, results[2]);
+                });
             },
-
-            // Get clustern ntc
-            (articles_, cb) => {
-                articles = articles_;
-                Log.getUserFavoriteClusters(req.colls, req.user._id, cb);
-            },
-
 
             // Get category percentage
-            (clusters, cb) => {
+            (clusters_, cb) => {
                 var clusterRatios = {};
-                var totalClusterSum = utils.sum(clusters.map((cluster) => cluster.count));
-                clusters.forEach((cluster) => {
+                var totalClusterSum = utils.sum(clusters_.map((cluster) => cluster.count));
+                clusters_.forEach((cluster) => {
                     clusterRatios[cluster._id] = cluster.count / totalClusterSum;
                 });
 
-                var totalCategoryRatios = utils.normalizeAttributeCounts(utils.countAttributes(articles, 'cate'));
-                var totalClusterRatios = utils.normalizeAttributeCounts(utils.countAttributes(articles, 'cluster'));
+                var totalCategoryRatios = utils.normalizeAttributeCounts(utils.countAttributes(allArticles, 'cate'));
+                var totalClusterRatios = utils.normalizeAttributeCounts(utils.countAttributes(allArticles, 'cluster'));
 
 
                 function getClusterScore(clusterID) {
@@ -49,23 +55,25 @@ router.get('/articleList',
                     return (1 + 4 * logClusterRatio) / (1 + 1.5 * totalClusterRatio);
                 }
 
-                articles.forEach((article) => {
+                allArticles.forEach((article) => {
                     if(article.title.length > 20) {
                         article.shortTitle = article.title.substring(0, 20) + '...';
                     }
                     else {
                         article.shortTitle = article.title;
                     }
+
                     article.categoryPercentage = (totalCategoryRatios[article.cate] * 100).toFixed(1);
                     article.clusterPercentage = (totalClusterRatios[article.cluster] * 100).toFixed(1);
                     article.logClusterRatio = (clusterRatios[article.cluster] || 0).toFixed(2);
                     article.totalClusterRatio = (totalClusterRatios[article.cluster] || 0).toFixed(2);
+                    article.rank = (allClusters[article.cluster] || {}).rank || 0;
                     article.clusterScore = getClusterScore(article.cluster);
                 });
-                articles.sort((a, b) => -(a.clusterScore - b.clusterScore));
+                allArticles.sort((a, b) => -(a.clusterScore - b.clusterScore));
 
                 res.render('admin/articleList', {
-                    articles: articles
+                    articles: allArticles
                 });
                 cb(null);
             }

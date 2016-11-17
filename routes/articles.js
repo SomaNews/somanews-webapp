@@ -32,7 +32,7 @@ router.get('/feed',
         'use strict';
 
         // 각 클러스터마다 해당 클러스터에 포함된 뉴스들과 뉴스 갯수를 얻는다.
-        Article.listNewestNewsPerCluster(req.colls, 24, function (err, clusters) {
+        Article.listClusters(req.colls, 24, function (err, clusters) {
             if (err) {
                 return res.send(err);
             }
