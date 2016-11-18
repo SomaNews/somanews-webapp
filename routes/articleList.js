@@ -23,7 +23,7 @@ router.get('/articleList',
             // Get articles
             (cb) => {
                 async.parallel([
-                    (cb) => Article.listArticles(req.colls, 0, 100, cb),
+                    (cb) => Article.listArticles(req.colls, 0, 1000, cb),
                     (cb) => Article.listClusters(req.colls, 99999, cb),
                     (cb) => Log.getUserFavoriteClusters(req.colls, req.user._id, cb)
                 ], (err, results) => {
@@ -67,6 +67,8 @@ router.get('/articleList',
                     article.clusterPercentage = (totalClusterRatios[article.cluster] * 100).toFixed(1);
                     article.logClusterRatio = (clusterRatios[article.cluster] || 0).toFixed(2);
                     article.totalClusterRatio = (totalClusterRatios[article.cluster] || 0).toFixed(2);
+                    article.lcr = (clusterRatios[article.cluster] || 0);
+                    article.tcr = (totalClusterRatios[article.cluster] || 0);
                     article.rank = (allClusters[article.cluster] || {}).rank || 0;
                     article.clusterScore = getClusterScore(article.cluster);
                 });
