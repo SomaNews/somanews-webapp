@@ -16,6 +16,7 @@ router.get('/profile',
                 Log.getUserLog(req.colls, req.user._id, 0, 100, callback);
             },
             function (logs, callback) {
+                logs = logs.filter(l => l.article.cluster != -1);
                 logs.forEach((e) => {
                     e.cate = e.article.cate;
                     e.cluster = e.article.cluster;

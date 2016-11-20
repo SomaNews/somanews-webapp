@@ -8,70 +8,58 @@ block content
     .container
         block articleList
             .col-xs-4
-                div#editor
+                div.aceEdit#articleRank
                     | /**
                     |  * Calculate article score
                     |  *
                     |  * @param lcr - logClusterRatio
                     |  * @param tcr - totalClusterRatio
+                    |  * @param ds - date since
                     |  * @param rank - rank
                     |  * @returns {Number} - Article score
                     |  */
                     | return (1 + 4 * lcr) / (1 + 1.5 * tcr);
+
                 script(src='https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js')
-                script.
-                    var editor = ace.edit("editor");
-                    editor.setTheme("ace/theme/monokai");
-                    editor.getSession().setMode("ace/mode/javascript");
-
-
-                    editor.getSession().on('change', function (e) {
-                        try {
-                            var funcBody = editor.getValue();
-                            var f = new Function(['lcr', 'tcr', 'rank'], funcBody);
-                            var $aList = $('#aList');
-
-                            var $rows = $aList.find('tbody > tr').get();
-                            $.each($rows, function(i) {
-                                var $this = $(this);
-                                var lcr = Number($this.find('.lcr').val());
-                                var tcr = Number($this.find('.tcr').val());
-                                var rank = Number($this.find('td.rank').text());
-                                $this.find('td.cs').text(f(lcr, tcr, rank));
-                            });
-                            $rows.sort(function (a, b) {
-                                var acs = Number($(a).find('td.cs').text());
-                                var bcs = Number($(b).find('td.cs').text());
-                                if(acs == bcs) {
-                                    var ai = Number($(a).find('td.input').text());
-                                    var bi = Number($(b).find('td.input').text());
-                                    return ai - bi;
-                                }
-                                else return bcs - acs;
-                            });
-                            $.each($rows, function() {
-                                var $this = $(this);
-                                var cs = Number($this.find('.cs').text());
-                                $this.find('.cs').text(cs.toFixed(3));
-                            })
-                            $.each($rows, function(i, row) {
-                                $aList.children('tbody').append(row);
-                            })
-
-                        }
-                        catch (e) {
-                            console.log(e);
-                        }
-                    });
-
             .col-xs-8
+                table#cList.table.table-bordered.table-striped.table-condensed
+                    thead
+                        tr
+                            th Title
+                            th rank
+                            th count
+                            th timeMean
+                            th cohesion
+                            th score
+                    tbody
+                        each cluster, i in clusters
+                            tr
+                                td
+                                    img.providerIcon(src='/images/providerIcons/#{cluster.leading.provider}.ico')
+                                    | #{cluster.leading.shortTitle}
+                                    input.idx(type='hidden', value=i)
+                                td
+                                    | #{cluster.rank.toFixed(3)}
+                                    input.rank(type='hidden', value=cluster.rank)
+                                td
+                                    | #{cluster.count}
+                                    input.count(type='hidden', value=cluster.count)
+                                td
+                                    | #{cluster.deltaTime.toFixed(2)}
+                                    input.timeMean(type='hidden', value=cluster.deltaTime)
+                                td
+                                    | #{cluster.cohesion.toFixed(3)}
+                                    input.cohesion(type='hidden', value=cluster.cohesion)
+                                td.cs= cluster.rank.toFixed(3)
+
                 table#aList.table.table-bordered.table-striped.table-condensed
                     thead
                         tr
+                            th C
                             th 제목
                             th 시간
                             th 카테고리
-                            // th 클러스터
+                            th 클러스터
                             th lCR
                             th tCR
                             th r
@@ -80,21 +68,30 @@ block content
                         each article, i in articles
                             tr
                                 td
+                                    input.setViewed(type="checkbox", checked=article.viewed)
+                                td
                                     a(href='/articles/#{encodeURIComponent(article._id)}', title=article.title)
                                         img.providerIcon(src='/images/providerIcons/#{article.provider}.ico')
                                         | #{article.shortTitle}
                                     input.idx(type='hidden', value=i)
-                                td= formatDate(article.publishedAt)
-                                td #{article.cate} (#{article.categoryPercentage}%)
-                                // td #{article.cluster} (#{article.clusterPercentage}%)
                                 td
-                                    | #{article.logClusterRatio}
+                                    | #{formatDate(article.publishedAt)} (#{article.dateSince.toFixed(2)})
+                                    input.ds(type='hidden', value=article.dateSince)
+                                td #{article.cate} (#{article.categoryPercentage}%)
+                                td
+                                    | #{article.cluster} (#{article.clusterPercentage}%)
+                                    input.cluster(type='hidden', value=article.cluster)
+                                td
+                                    span.lcrText #{article.logClusterRatio}
                                     input.lcr(type='hidden', value=article.lcr)
                                 td
                                     | #{article.totalClusterRatio}
                                     input.tcr(type='hidden', value=article.tcr)
                                 td.rank= article.rank
                                 td.cs= article.clusterScore.toFixed(3)
+
+            script(src='/javascripts/articleList.js')
+
 
     script.
         $('table').floatThead();

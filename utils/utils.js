@@ -93,6 +93,9 @@ exports.normalizeAttributeCounts = function (attrCounts) {
     Object.keys(attrCounts).forEach((k) => {
         s += attrCounts[k];
     });
+
+    if(s === 0) s = 1;  // Prevent divide by 0
+
     Object.keys(attrCounts).forEach((k) => {
         attrCounts[k] /= s;
     });

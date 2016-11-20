@@ -136,7 +136,7 @@ exports.listClusters = function (colls, clusterCount, callback) {
 
             // Get clusters
             colls.clusterDB.find({clusteredAt: {$gte: ret.clusteredAt}}, {'articles.content': 0})
-                .sort({ntc: -1}).limit(clusterCount).toArray(cb);
+                .sort({rank: -1}).limit(clusterCount).toArray(cb);
         },
         (data, cb) => {
             callback(null, data);
@@ -146,4 +146,3 @@ exports.listClusters = function (colls, clusterCount, callback) {
         if (err) callback(err);
     });
 };
-
