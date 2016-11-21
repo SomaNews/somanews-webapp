@@ -23,6 +23,62 @@ router.get('/modeB', (req, res) => {
 });
 
 
+/**
+ * Calculate cluster ratio per log.
+ * @param clusters
+ * @param userLogs
+ */
+function calculateClusterLCR(clusters, userLogs) {
+    "use strict";
+    // Calculate lCR
+    var logCounts = {};
+    userLogs.forEach(log => {
+        var cluster = log.article.cluster;
+        logCounts[cluster] = (logCounts[cluster] || 0) +
+            Math.min((log.endedAt.getTime() - log.startedAt.getTime()) / (1000 * 30) + 1, 5);
+    });
+    var logClusterRatioTable = utils.normalizeAttributeCounts(logCounts);
+
+    clusters.forEach((cluster) => {
+        cluster.lCR = logClusterRatioTable[cluster.cluster] || 0;
+    });
+}
+
+
+/**
+ * Calculate lCR2 for clusters
+ * @param clusters - Clusters with lCR data
+ */
+function calculateClusterLCR2(clusters) {
+    // Adjust lCR with adjacent clusters's lCR
+    clusters.forEach((cluster) => {
+        var lCR2 = cluster.lCR * (2.5 - 1);
+        lCR2 += utils.sum(clusters.map(
+            cluster2 => cluster2.lCR * utils.dictCosineSimilarity(cluster2.cate, cluster.cate)
+        ));
+        cluster.lCR2 = lCR2;
+    });
+}
+
+
+/**
+ * Calculate cluster scores
+ * @param clusters
+ * @param userLogs
+ */
+function calculateClusterScore(clusters, userLogs) {
+    "use strict";
+    calculateClusterLCR(clusters, userLogs);
+    calculateClusterLCR2(clusters);
+
+    clusters.forEach((cluster) => {
+        cluster.score = cluster.rank *
+            (1 + 0.3 * Math.max(Math.sqrt(userLogs.length) - 1.3, 0) * cluster.lCR2) *
+            (0.4 * Math.random() + 0.8);  // Add some randomty
+    });
+}
+
+
 // 뉴스 리스트
 router.get('/feed',
     login.checkAuth,
@@ -44,75 +100,34 @@ router.get('/feed',
                 );
             },
 
-            // Filter logs
+            // Calculate personalized scores
             (clusters_, logs_, cb) => {
                 clusters = clusters_;
                 var currentClusters = new Set(clusters.map((c) => c.cluster));
                 userLogs = logs_.filter((log) => currentClusters.has(log.article.cluster)); // Filter only valid logs
+                calculateClusterScore(clusters, userLogs);
                 cb(null);
             },
 
-            // Calculate lCR table
+            // Get non-personalized feeds
             (cb) => {
-                // Calculate logClusterRatio
-                var logCounts = {};
-                userLogs.forEach(log => {
-                    var cluster = log.article.cluster;
-                    logCounts[cluster] = (logCounts[cluster] || 0) +
-                        Math.min((log.endedAt.getTime() - log.startedAt.getTime()) / (1000 * 30) + 1, 5);
-                });
-                var logClusterRatioTable = utils.normalizeAttributeCounts(logCounts);
-
-                clusters.forEach((cluster) => {
-                    cluster.lCR = logClusterRatioTable[cluster.cluster] || 0;
-                });
-
-                console.log('lCR Table', logClusterRatioTable);
-                cb(null);
-            },
-
-            // Calculate category-adjusted lCR2
-            (cb) => {
-                clusters.forEach((cluster) => {
-                    var lCR2 = cluster.lCR * (2.5 - 1);
-                    lCR2 += utils.sum(clusters.map(
-                        cluster2 =>cluster2.lCR * utils.dictCosineSimilarity(cluster2.cate, cluster.cate)
-                    ));
-                    cluster.lCR2 = lCR2;
-                });
-
-                cb(null);
-            },
-
-            (cb) => {
-                // Calculate score
-                // row['score'] = rank * 0.1 * (1 + 0.3 * max(sqrt(logCount) - 1.3, 0) * lctScore)
-                clusters.forEach((cluster) => {
-                    cluster.score = cluster.rank *
-                        (1 + 0.3 * Math.max(Math.sqrt(userLogs.length) - 1.3, 0) * cluster.lCR2) *
-                        (0.4 * Math.random() + 0.8);  // Add some randomty
-                });
+                // Get carousel clusters
                 clusters.sort((a, b) => b.score - a.score);
-                cb(null);
-            },
+                var carouselFeeds = clusters.slice(0, 3).map((cluster) => cluster.leading);
 
-            (cb) => {
-                // Select carousel clusters
-                var carouselClusters = clusters.slice(0, 3).map((cluster) => {
-                    var article = cluster.leading;
-                    article.title = '[' + cluster.score.toFixed(2) + '] ' + article.title;
-                    return article;
-                });
+                // Get non-personalized feeds
+                clusters.sort((a, b) => b.rank - a.rank);
+                var nonPersonalizedFeeds = clusters.slice(0, 4).map(cluster => cluster.leading);
+                clusters = clusters.slice(4);
 
-                var clusterLeadingList = clusters.slice(3, 11).map((cluster) => {
-                    var article = cluster.leading;
-                    article.title = '[' + cluster.score.toFixed(2) + '] ' + article.title;
-                    return article;
-                });
+                // Get personalized feeds
+                clusters.sort((a, b) => b.score - a.score);
+                var personalizedFeeds = clusters.slice(0, 8).map(cluster => cluster.leading);
 
                 res.render('feed', {
-                    carouselList : carouselClusters,
-                    clusterLeadingList: clusterLeadingList
+                    carouselFeeds : carouselFeeds,
+                    nonPersonalizedFeeds: nonPersonalizedFeeds,
+                    personalizedFeeds: personalizedFeeds
                 });
                 cb(null);
             }

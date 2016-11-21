@@ -142,8 +142,27 @@ exports.listClusters = function (colls, clusterCount, callback) {
         // Find when clustering had happened most recently
         (cb) => {
             // Get clusters
-            colls.clusterDB.find({clusteredAt: colls.clusteredAt}, {'articles.content': 0})
-                .sort({rank: -1}).limit(clusterCount).toArray(cb);
+            colls.clusterDB
+                .find({clusteredAt: colls.clusteredAt}, {'articles.content': 0})
+                .sort({rank: -1})
+                .limit(clusterCount)
+                .toArray((err, clusters) => {
+                    if (err) return callback(err);
+
+                    /**
+                     * TODO : aclusters 안의 articles와 leadings에선 아직 article_id가 아니라 _id를 쓰고
+                     * 있습니다. 지금 당장은 model단에서 이 문제를 해결해주고 있는데, DB를 조만간 수정해야 할겁니다.
+                     */
+                    clusters.forEach(cluster => {
+                        if (!cluster.leading.article_id) {
+                            cluster.leading.article_id = cluster.leading._id;
+                        }
+                        cluster.articles.forEach(article => {
+                            if (!article.article_id) article.article_id = article._id;
+                        });
+                    });
+                    cb(null, clusters);
+            });
         },
         (data, cb) => {
             callback(null, data);
