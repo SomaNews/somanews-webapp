@@ -3,10 +3,13 @@ extends ../layout/layout
 block content
     .container
         .row
-            svg.chart(width="420", height=20*countList.length, aria-labelledby="title desc", role="img")
-                -var index = 0
-                each data in countList
-                    g.bar
-                        text(x=0, y=index*20+10, dy=".35em")=data._id
-                        rect(x=100, y=index*20, height=19, width=data.count/2.0)
-                    -index++
+            .graphContainer
+                .graph
+                    h3 뉴스 로그
+                    script.
+                        new Chartist.Line('.graph', {
+                            labels: !{JSON.stringify(labels)},
+                            series: [!{JSON.stringify(counts)}]
+                        }, {
+                            fullWidth: true
+                        });

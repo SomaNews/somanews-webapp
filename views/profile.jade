@@ -8,15 +8,16 @@ block content
         h1 유저 프로필
         // 로그 그래프
         div
-            .ct-category-chart
-                h3 카테고리 분포
-                script.
-                    graphFrequencies('.ct-category-chart', !{JSON.stringify(categoryFrequencyData)})
+            .graphContainer
+                .ct-category-chart
+                    h3 카테고리 분포
+                    script.
+                        graphFrequencies('.ct-category-chart', !{JSON.stringify(categoryFrequencyData)})
 
-            .ct-cluster-chart
-                h3 클러스터 분포
-                script.
-                    graphFrequencies('.ct-cluster-chart', !{JSON.stringify(clusterFrequencyData)})
+                .ct-cluster-chart
+                    h3 클러스터 분포
+                    script.
+                        graphFrequencies('.ct-cluster-chart', !{JSON.stringify(clusterFrequencyData)})
 
         // 괸심 뉴스들
         block userLikes
@@ -31,7 +32,7 @@ block content
                         th= '시간'
                         th= '제목'
                         th= '카테고리'
-                        th= '클러스터'
+                        th.hidden-xs= '클러스터'
                 tbody
                     each log in logs
                         tr
@@ -39,4 +40,4 @@ block content
                             td
                                 a(href='/articles/#{encodeURIComponent(log.article.article_id)}')=log.article.title
                             td= log.article.cate
-                            td= log.article.cluster
+                            td.hidden-xs= log.article.cluster

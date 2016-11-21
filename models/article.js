@@ -11,6 +11,7 @@ var async = require('async');
 exports.selectCollection = function (clusterType, callback) {
     "use strict";
 
+    var db;
     var articleDBname, clusterDBname;
     var articleDB, clusterDB;
 
@@ -21,7 +22,8 @@ exports.selectCollection = function (clusterType, callback) {
         },
 
         // Get articleDB and clusterDB
-        (db, cb) => {
+        (db_, cb) => {
+            db = db_;
             if(clusterType == 'A') {
                 articleDBname = 'aarticles';
                 clusterDBname = 'aclusters';
@@ -49,6 +51,7 @@ exports.selectCollection = function (clusterType, callback) {
         },
         (lastCluster, cb) => {
             callback(null, {
+                db: db,
                 clusterType: clusterType,
                 clusteredAt: lastCluster.clusteredAt,
                 articleDB: articleDB,
