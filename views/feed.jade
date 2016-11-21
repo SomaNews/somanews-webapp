@@ -9,26 +9,17 @@ block content
         #mycarousel.carousel.slide(data-ride='carousel')
             // Add Slide Indicators
             ol.carousel-indicators
-                li.active(data-target='#mycarousel', data-slide-to='0')
-                li(data-target='#mycarousel', data-slide-to='1')
-                li(data-target='#mycarousel', data-slide-to='2')
+                each _, i in carouselList
+                    li(data-target='#mycarousel', data-slide-to=i, class=(i==0)?'active':'')
             // Add Carousel Wrapper for Slides
             .carousel-inner
-                .item.active
-                    .img-wrapper(style='background-image: url("http://imgnews.naver.net/image/022/2016/10/25/20161025002504_0_99_20161026002105.jpg?type=w540");')
-                        .carousel-caption
-                            h2 ‘연설문’ 해명 1분30초… '의혹'만 남았다
-                            p 박 대통령 대국민 사과… 미르·우병우 언급 안해/ 정윤회 비선실세 의혹 땐 사과 안해 / 사안 폭발력에 하루 만에 입장 표명 / 최씨 관련 다른 의혹도 신빙성 높아 / 유출 자료 2014년 후 있을 땐 치명타
-                .item
-                    .img-wrapper(style='background-image: url("http://imgnews.naver.net/image/032/2016/10/25/l_2016102601003459000259379_99_20161025234308.jpg?type=w540");')
-                        .carousel-caption
-                            h2 여야 없이 “특검을”…비박은 “박 대통령 탈당해야”
-                            p 계파 가리지 않고 진실규명 요구…새누리 지도부 혼란, 야당은 “대통령도 수사 대상” “내각 총사퇴해야” 총공세
-                .item
-                    .img-wrapper(style='background-image: url("http://imgnews.naver.net/image/056/2016/10/25/3367005_rpH_99_20161025105807.jpg?type=w540");')
-                        .carousel-caption
-                            h2 “최순실씨 모녀, 사위 추정 인물과 은신중” 안치용씨 주장
-                            p 최순실씨의 딸 정유라씨가 이미 결혼을 했고, 남편으로 보이는 인물과 독일에 은신했던 것으로 추정되는 정황이 발견됐다고 재미 블로거 안치용씨가 주장했다.
+                each leading, i in carouselList
+                    .item(class=(i==0)?'active':'')
+                        .img-wrapper(style='background-image: url("#{leading.imageURL}");')
+                            .carousel-caption
+                                h2= leading.title
+                                p= shortenString(leading.content, 400)
+
 
             // Add Left & Right Navigation Controls
             a.left.carousel-control(href='#mycarousel', data-slide='prev')
@@ -39,7 +30,6 @@ block content
 
         // Page Features
         block feedArticles
-            +articleList_Tiled(articleList.title, articleList.articles)
+            +articleList_Tiled('관심있어하실만한 뉴스', clusterLeadingList)
 
-        // /.row
         hr

@@ -36,6 +36,7 @@ app.set('view engine', 'jade');
 app.locals.sprintf = require('sprintf-js').sprintf;
 app.locals.formatDate = utils.formatDate;
 app.locals.htmlEscapeMultilineText = utils.htmlEscapeMultilineText;
+app.locals.shortenString = utils.shortenString;
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
