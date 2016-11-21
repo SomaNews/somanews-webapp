@@ -23,7 +23,6 @@ router.get('/modeB', (req, res) => {
 });
 
 
-
 // 뉴스 리스트
 router.get('/feed',
     login.checkAuth,
@@ -42,7 +41,7 @@ router.get('/feed',
                     (cb) => Log.getUserLog(req.colls, req.user._id, 0, 100, cb)
                     ], (err, results) => {
                         if(err) return cb(err);
-                        cb(null, results[0], results[1])
+                        cb(null, results[0], results[1]);
                     }
                 );
             },
@@ -71,15 +70,10 @@ router.get('/feed',
 
                 // Calculate category-adjusted logClusterRatio
                 clusters.forEach((cluster) => {
-                    var cateDict = cluster.cate;
-                    cluster.mainCategory = Object.keys(cateDict).reduce((a, b) => cateDict[a] > cateDict[b] ? a : b);
-                });
-                clusters.forEach((cluster) => {
                     var lCR2 = cluster.lCR * (2.5 - 1);
-                    lCR2 += utils.sum(
-                        clusters.filter((c) => c.mainCategory == cluster.mainCategory)
-                            .map((c) => cluster.lCR)
-                    );
+                    lCR2 += utils.sum(clusters.map(
+                        cluster2 =>cluster2.lCR * utils.dictCosineSimilarity(cluster2.cate, cluster.cate)
+                    ));
                     cluster.lCR2 = lCR2;
                 });
 

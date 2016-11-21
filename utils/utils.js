@@ -145,11 +145,16 @@ exports.makePieGraphData = function (entries, attrType) {
 };
 
 
-
-exports.sum = function (data) {
+/**
+ * Sum of list
+ * @param data - List
+ * @returns {*|Number}
+ */
+function sum(data) {
     "use strict";
     return data.reduce((a, b) => a + b, 0);
-};
+}
+exports.sum = sum;
 
 
 /**
@@ -162,4 +167,20 @@ exports.shortenString = function (str, maxLength) {
     "use strict";
     if(str.length > maxLength - 3) return str.substring(0, maxLength - 3) + '...';
     return str;
+};
+
+
+/**
+ * Dictionary-based cosine similarity
+ * @param dictA
+ * @param dictB
+ * @returns {number}
+ */
+exports.dictCosineSimilarity = function (dictA, dictB) {
+    "use strict";
+    var aKeys = Object.keys(dictA);
+    var aSize = Math.sqrt(sum(Object.keys(dictA).map(x => dictA[x] * dictA[x]))) || 1;
+    var bSize = Math.sqrt(sum(Object.keys(dictB).map(x => dictB[x] * dictB[x]))) || 1;
+    var dotProduct = sum(aKeys.map(key => dictA[key] * (dictB[key] || 0)));
+    return dotProduct / aSize / bSize;
 };
