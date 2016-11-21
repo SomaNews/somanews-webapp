@@ -24,7 +24,7 @@ router.get('/profile',
                 });
             },
             function (logs, clusters, callback) {
-                var clusterDict = {}
+                var clusterDict = {};
                 clusters.forEach(cluster => {
                     clusterDict[cluster.cluster] = cluster;
                 });

@@ -7,17 +7,16 @@ block content
     .container
         h1 유저 프로필
         // 로그 그래프
-        .row
-            .col-xs-5
-                .ct-category-chart.ct-perfect-fourth
-                    h3 카테고리별 차트
-                    script.
-                        graphFrequencies('.ct-category-chart', !{JSON.stringify(categoryFrequencyData)})
-            .col-xs-5.col-xs-offset-2
-                .ct-cluster-chart.ct-perfect-fourth
-                    h3 클러스터별 차트
-                    script.
-                        graphFrequencies('.ct-cluster-chart', !{JSON.stringify(clusterFrequencyData)})
+        div
+            .ct-category-chart
+                h3 카테고리 분포
+                script.
+                    graphFrequencies('.ct-category-chart', !{JSON.stringify(categoryFrequencyData)})
+
+            .ct-cluster-chart
+                h3 클러스터 분포
+                script.
+                    graphFrequencies('.ct-cluster-chart', !{JSON.stringify(clusterFrequencyData)})
 
         // 괸심 뉴스들
         block userLikes
@@ -25,7 +24,7 @@ block content
                 +articleList_Tiled(articleList.title, articleList.articles)
 
         // 로그 리스트
-        .row
+        div
             table.table.table-bordered.table-striped.table-condensed
                 thead
                     tr

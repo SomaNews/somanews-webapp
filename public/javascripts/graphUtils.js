@@ -4,27 +4,20 @@
 
 /**
  * Graph frequencies with given data
+ * @param className - Class of div to put graph to
  * @param data - Data with labels and series.
  */
 function graphFrequencies(className, data) {
     "use strict";
-
-    var freqsum = data.series.reduce(function (a, b) { return a + b; }, 0);
-    if (freqsum === 0) {
-        console.warn('Cannot graph data with nothing');
-        return;  // Cannot graph with no data
-    }
-
-    var labelGenerator = function (originalLabel, index) {
-        var freq = data.series[index];
-        var percent = Math.floor(freq * 100 / freqsum);
-        return originalLabel + " (" + percent + "%)";
-    };
-
-    new Chartist.Pie(className, data, {
-        chartPadding: 30,
-        labelOffset: 60,
-        labelDirection: 'explode',
-        labelInterpolationFnc: labelGenerator
+    new Chartist.Bar(className, {
+        labels: data.labels,
+        series: [data.series]
+    }, {
+        reverseData: true,
+        horizontalBars: true,
+        height: ( data.labels.length * 30 + 30) + 'px', // last 40pxs are for the labels
+        axisY: {
+            offset: 120
+        },
     });
 }

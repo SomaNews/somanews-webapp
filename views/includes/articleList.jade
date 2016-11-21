@@ -11,7 +11,7 @@ mixin articleList_Tiled(title, articles)
         ul.list-unstyled
             .row.text-center
                 each article in articles
-                    li.col-md-3.col-sm-6.hero-feature
+                    li.col-md-3.col-xs-6.hero-feature
                         .thumbnail
                             a(href='/articles/#{encodeURIComponent(article.article_id)}')
                                 .ratio-4to3

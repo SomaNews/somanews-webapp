@@ -115,7 +115,7 @@ function sortAttributeCounts(attrCounts) {
     for(var i = 0 ; i < keys.length ; i++) {
         l[l.length] = [attrCounts[keys[i]], keys[i]];
     }
-    l.sort();
+    l.sort((a, b) => b[0] - a[0]);
     return l.map((v) => [v[1], v[0]]);
 }
 
@@ -134,6 +134,7 @@ exports.makePieGraphData = function (entries, attrType) {
     // Count attributes
     var attrCounts = countAttributes(entries, attrType);
     var l = sortAttributeCounts(attrCounts);
+
 
     // Return chartist.js format data
     var items = l.map((e) => e[1]);
