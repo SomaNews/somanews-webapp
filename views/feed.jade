@@ -17,7 +17,7 @@ block content
                 each leading, i in carouselFeeds
                     .item(class=(i==0)?'active':'')
                         a(href='/articles/#{encodeURIComponent(leading.article_id)}')
-                            .img-wrapper(style='background-image: url("#{encodeURI(leading.imageURL)}");')
+                            .img-wrapper(style='background-image: url("#{leading.imageURL}");')
                                 .carousel-caption
                                     h2= leading.title
                                     p= shortenString(leading.content, 400)
