@@ -16,6 +16,9 @@ function graphFrequencies(className, data) {
         reverseData: true,
         horizontalBars: true,
         height: ( data.labels.length * 30 + 30) + 'px', // last 40pxs are for the labels
+        axisX: {
+            onlyInteger: true
+        },
         axisY: {
             offset: 120
         },

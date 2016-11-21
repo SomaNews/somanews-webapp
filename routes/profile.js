@@ -33,7 +33,7 @@ router.get('/profile',
                 logs.forEach((e) => {
                     e.cate = e.article.cate;
                     e.cluster = '(' + e.article.cluster + ') ' +
-                        utils.shortenString(clusterDict[e.article.cluster].leading.title, 20);
+                        utils.shortenString(clusterDict[e.article.cluster].leading.title, 23);
                 });
 
                 var categoryFrequencyData = utils.makePieGraphData(logs, 'cate');
