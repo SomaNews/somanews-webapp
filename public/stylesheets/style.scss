@@ -33,6 +33,12 @@ body {
     height: 100%;
     width: 100%;
     font-family: 'Muli', 'Helvetica', 'Arial', 'sans-serif';
+    background-color: #f3f3f3;
+}
+
+body > .container {
+    background-color: #fff;
+    border: 1px solid #eee;
 }
 
 a {
@@ -212,6 +218,10 @@ header {
     header .header-content .header-content-inner h1 {
         font-size: 50px;
     }
+
+    body > .container, nav > .container {
+        width: 850px;
+    }
 }
 
 section {
@@ -325,24 +335,6 @@ section {
     }
 }
 
-@media (min-width: 768px) {
-    section.about h2 {
-        font-size: 70px;
-    }
-}
-
-@media (min-width: 992px) {
-    section.features .feature-item {
-        max-width: none;
-    }
-}
-
-@media (min-width: 768px) {
-    section.cta .cta-content h2 {
-        font-size: 80px;
-    }
-}
-
 footer {
     background-color: #222222;
     padding: 25px 0;
@@ -435,7 +427,7 @@ svg.ct-chart-pie {
 .ratio-4to3 {
     position: relative;
     width: 100%;
-    padding-bottom: 70%;
+    padding-bottom: 60%;
 }
 
 table thead th {

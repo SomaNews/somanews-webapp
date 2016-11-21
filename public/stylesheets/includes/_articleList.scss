@@ -1,6 +1,4 @@
 .list-article-tiled {
-  margin-bottom: 30px;
-
   .thumbnail {
     position: relative;
     height: auto;
@@ -17,9 +15,11 @@
     }
 
     .caption {
+      padding: 0;
+      margin: 0.5em;
       overflow: hidden;
       text-overflow: ellipsis;
-      height: 6em;
+      height: 3em;
       color: #111;
 
       .providerIcon {
@@ -27,10 +27,17 @@
         height: 1.1em;
         margin-right: .5em;
       }
+
+      p {
+        font-size: 1em;
+        line-height: 1.5em;
+      }
+
     }
 
     .time {
       color: #777;
+      margin: 0.5em;
     }
   }
 }
