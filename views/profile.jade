@@ -38,6 +38,6 @@ block content
                         tr
                             td= formatDate(log.startedAt)
                             td
-                                a(href='/articles/#{encodeURIComponent(log.article._id)}')=log.article.title
+                                a(href='/articles/#{encodeURIComponent(log.article.article_id)}')=log.article.title
                             td= log.article.cate
                             td= log.article.cluster

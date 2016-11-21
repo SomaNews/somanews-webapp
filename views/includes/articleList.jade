@@ -13,7 +13,7 @@ mixin articleList_Tiled(title, articles)
                 each article in articles
                     li.col-md-4.col-sm-6.hero-feature
                         .thumbnail
-                            a(href='/articles/#{encodeURIComponent(article._id)}')
+                            a(href='/articles/#{encodeURIComponent(article.article_id)}')
                                 .ratio-4to3
                                     if(article.imageURL)
                                         .img-wrapper(style='background-image: url(#{article.imageURL});')
@@ -36,7 +36,7 @@ mixin articleList_List(title, articles)
         ul.list-unstyled
             each article in articles
                 li
-                    a(href='/articles/#{encodeURIComponent(article._id)}')
+                    a(href='/articles/#{encodeURIComponent(article.article_id)}')
                         .caption
                             p
                                 img.providerIcon(src='/images/providerIcons/#{article.provider}.ico')
@@ -54,7 +54,7 @@ mixin articleList_List_Admin(title, articles)
         ul.list-unstyled
             each article in articles
                 li
-                    a(href='/articles/#{encodeURIComponent(article._id)}')
+                    a(href='/articles/#{encodeURIComponent(article.article_id)}')
                         .caption
                             p
                                 img.providerIcon(src='/images/providerIcons/#{article.provider}.ico')

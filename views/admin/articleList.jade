@@ -70,7 +70,7 @@ block content
                                 td
                                     input.setViewed(type="checkbox", checked=article.viewed)
                                 td
-                                    a(href='/articles/#{encodeURIComponent(article._id)}', title=article.title)
+                                    a(href='/articles/#{encodeURIComponent(article.article_id)}', title=article.title)
                                         img.providerIcon(src='/images/providerIcons/#{article.provider}.ico')
                                         | #{article.shortTitle}
                                     input.idx(type='hidden', value=i)

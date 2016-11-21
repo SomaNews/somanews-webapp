@@ -47,7 +47,7 @@ router.get('/articleList',
                 var articleViewed = {};
                 userLog.forEach((log) => {
                     clusterRatios[log.article.cluster] = (clusterRatios[log.cluster] || 0) + 1;
-                    articleViewed[log.article._id] = true;
+                    articleViewed[log.article.article_id] = true;
                 });
 
                 var totalCategoryRatios = utils.normalizeAttributeCounts(utils.countAttributes(allArticles, 'cate'));
@@ -86,7 +86,7 @@ router.get('/articleList',
                     article.lcr = (clusterRatios[article.cluster] || 0);
                     article.tcr = (totalClusterRatios[article.cluster] || 0);
                     article.rank = (allClustersMap[article.cluster] || {}).rank || 0;
-                    article.viewed = !!articleViewed[article._id];
+                    article.viewed = !!articleViewed[article.article_id];
                     article.clusterScore = getClusterScore(article.cluster);
                     article.dateSince = (currentTime.getTime() - article.publishedAt.getTime()) / (1000 * 3600 * 24);
                 });

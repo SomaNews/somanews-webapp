@@ -116,10 +116,13 @@ exports.getUserLog = function (colls, userID, start, count, callback) {
             { $lookup: {
                 from: colls.articleDBName,
                 localField: 'article',
-                foreignField: '_id',
+                foreignField: 'article_id',
                 as: 'article'
             }},
-            { $unwind: '$article' }
+            { $unwind: '$article' },
+            { $match: {
+                'article.clusteredAt': colls.clusteredAt,
+            }}
         ], function (err, ret) {
             if (err) {
                 return callback(err);
@@ -164,7 +167,7 @@ exports.getUserFavoriteClusters = function (colls, userID, callback) {
                 $lookup: {
                     from: colls.articleDBName,
                     localField: 'article',
-                    foreignField: '_id',
+                    foreignField: 'article_id',
                     as: 'article'
                 }
             },
@@ -175,6 +178,9 @@ exports.getUserFavoriteClusters = function (colls, userID, callback) {
                     count: {$sum: 1},
                 }
             },
+            { $match: {
+                'article.clusteredAt': colls.clusteredAt,
+            }},
             {$sort: {count: -1}}
         ], callback);
     });

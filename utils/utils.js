@@ -150,3 +150,16 @@ exports.sum = function (data) {
     "use strict";
     return data.reduce((a, b) => a + b, 0);
 };
+
+
+/**
+ * Shorten string/title
+ * @param str - String to shorten
+ * @param maxLength - Maximum length
+ * @returns {*}
+ */
+exports.shortenString = function (str, maxLength) {
+    "use strict";
+    if(str.length > maxLength - 3) return str.substring(0, maxLength - 3) + '...';
+    return str;
+};

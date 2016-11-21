@@ -39,12 +39,21 @@ exports.selectCollection = function (clusterType, callback) {
                 (err) => cb(err)
             );
         },
+
+        // Get last clustered time
         (values, cb) => {
+            articleDB = values[0];
+            clusterDB = values[1];
+
+            clusterDB.findOne({$query: {}, $orderBy: {clusteredAt: -1}}, {clusteredAt: 1}, cb);
+        },
+        (lastCluster, cb) => {
             callback(null, {
                 clusterType: clusterType,
-                articleDB: values[0],
+                clusteredAt: lastCluster.clusteredAt,
+                articleDB: articleDB,
                 articleDBName: articleDBname,
-                clusterDB: values[1],
+                clusterDB: clusterDB,
                 clusterDBName: clusterDBname
             });
             cb(null);
@@ -63,7 +72,10 @@ exports.selectCollection = function (clusterType, callback) {
  */
 exports.getArticle = function (colls, id, callback) {
     'use strict';
-    colls.articleDB.find({_id: id}).next(callback);
+    colls.articleDB.find({
+        clusteredAt: colls.clusteredAt,
+        article_id: id
+    }).next(callback);
 };
 
 
@@ -76,7 +88,7 @@ exports.getArticle = function (colls, id, callback) {
  */
 exports.listArticles = function (colls, start, count, callback) {
     "use strict";
-    colls.articleDB.find({}, {content: 0})
+    colls.articleDB.find({clusteredAt: colls.clusteredAt}, {content: 0})
         .sort({'publishedAt': -1, '_id': -1})
         .skip(start).limit(count).toArray(callback);
 };
@@ -93,17 +105,19 @@ exports.findRelatedArticles = function (colls, seedArticle, count, callback) {
     "use strict";
 
     // Vector input is not yet implemented
-    if(seedArticle._id === undefined) {
+    if(seedArticle.article_id === undefined) {
         return callback(new Error('Not implemented'));
     }
 
     // This article itself is not related!
-    var excludes = (colls.readArticles || []).slice(0);
-    excludes.push(seedArticle._id);
+    // var excludes = (colls.readArticles || []).slice(0);
+    // excludes.push(seedArticle.article_id);
+    var excludes = [];
 
     // Find cluster and return articles there
     colls.articleDB
         .find({
+            clusteredAt: colls.clusteredAt,
             _id: {$nin: excludes},
             cluster: seedArticle.cluster
         }, {content: 0})  // 같은 클러스터의 뉴스들. 컨텐츠는 제거한다.
@@ -127,15 +141,8 @@ exports.listClusters = function (colls, clusterCount, callback) {
     async.waterfall([
         // Find when clustering had happened most recently
         (cb) => {
-            colls.clusterDB.find().sort({clusteredAt: -1}).limit(1).next(cb);
-        },
-        (ret, cb) => {
-            if (!ret) {
-                return callback(new Error('No cluster data!'));
-            }
-
             // Get clusters
-            colls.clusterDB.find({clusteredAt: {$gte: ret.clusteredAt}}, {'articles.content': 0})
+            colls.clusterDB.find({clusteredAt: colls.clusteredAt}, {'articles.content': 0})
                 .sort({rank: -1}).limit(clusterCount).toArray(cb);
         },
         (data, cb) => {
