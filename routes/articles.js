@@ -37,7 +37,7 @@ router.get('/feed',
             // Get required data
             (cb) => {
                 async.parallel([
-                    (cb) => Article.listClusters(req.colls, 24, cb),
+                    (cb) => Article.listClusters(req.colls, 9999, cb),
                     (cb) => Log.getUserLog(req.colls, req.user._id, 0, 100, cb)
                     ], (err, results) => {
                         if(err) return cb(err);
@@ -88,7 +88,7 @@ router.get('/feed',
 
                 var articleList = {
                     title: '관심있어하실만한 뉴스',
-                    articles: clusters.map((cluster) => {
+                    articles: clusters.slice(0, 12).map((cluster) => {
                         var article = cluster.leading;
                         article.title = '[' + cluster.score.toFixed(2) + '] ' + article.title;
                         return article;
