@@ -7,21 +7,6 @@ block content
     // Page Content
     .container
         block articleList
-            .col-xs-4
-                div.aceEdit#articleRank
-                    | /**
-                    |  * Calculate article score
-                    |  *
-                    |  * @param lcr - logClusterRatio
-                    |  * @param tcr - totalClusterRatio
-                    |  * @param ds - date since
-                    |  * @param rank - rank
-                    |  * @returns {Number} - Article score
-                    |  */
-                    | return (1 + 4 * lcr) / (1 + 1.5 * tcr);
-
-                script(src='https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js')
-            .col-xs-8
                 table#cList.table.table-bordered.table-striped.table-condensed
                     thead
                         tr
@@ -89,9 +74,3 @@ block content
                                     input.tcr(type='hidden', value=article.tcr)
                                 td.rank= article.rank
                                 td.cs= article.clusterScore.toFixed(3)
-
-            script(src='/javascripts/articleList.js')
-
-
-    script.
-        $('table').floatThead();

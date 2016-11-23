@@ -47,7 +47,7 @@ exports.selectCollection = function (clusterType, callback) {
             articleDB = values[0];
             clusterDB = values[1];
 
-            clusterDB.findOne({$query: {}, $orderBy: {clusteredAt: -1}}, {clusteredAt: 1}, cb);
+            clusterDB.find().sort({clusteredAt: -1}).limit(1).next(cb);
         },
         (lastCluster, cb) => {
             callback(null, {

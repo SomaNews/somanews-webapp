@@ -34,8 +34,8 @@ function calculateClusterLCR(clusters, userLogs) {
     var logCounts = {};
     userLogs.forEach(log => {
         var cluster = log.article.cluster;
-        logCounts[cluster] = (logCounts[cluster] || 0) +
-            Math.min((log.endedAt.getTime() - log.startedAt.getTime()) / (1000 * 30) + 1, 5);
+        logCounts[cluster] = (logCounts[cluster] || 0) + 1;
+            // Math.min((log.endedAt.getTime() - log.startedAt.getTime()) / (1000 / 30) + 1, 5);
     });
     var logClusterRatioTable = utils.normalizeAttributeCounts(logCounts);
 
@@ -71,10 +71,17 @@ function calculateClusterScore(clusters, userLogs) {
     calculateClusterLCR(clusters, userLogs);
     calculateClusterLCR2(clusters);
 
+    let minRank = 99999, maxRank = -99999;
+
+    // max~min -> 1~2 로 재배열
+    clusters.forEach(cluster => {
+        minRank = Math.min(cluster.rank, minRank);
+        maxRank = Math.max(cluster.rank, maxRank);
+    });
     clusters.forEach((cluster) => {
-        cluster.score = cluster.rank *
-            (1 + 0.3 * Math.max(Math.sqrt(userLogs.length) - 1.3, 0) * cluster.lCR2) *
-            (0.4 * Math.random() + 0.8);  // Add some randomty
+        cluster.score = ((maxRank - cluster.rank) / (maxRank - minRank) + 5) *
+            (1 + 0.3 * Math.max(Math.sqrt(10 * userLogs.length) - 1.3, 0) * cluster.lCR2) *
+            (0.4 * Math.random() + 0.8);
     });
 }
 
@@ -106,6 +113,10 @@ router.get('/feed',
                 var currentClusters = new Set(clusters.map((c) => c.cluster));
                 userLogs = logs_.filter((log) => currentClusters.has(log.article.cluster)); // Filter only valid logs
                 calculateClusterScore(clusters, userLogs);
+                clusters.forEach(cluster => {
+                    var title = cluster.leading.title;
+                    cluster.leading.title = '[' + cluster.score.toFixed(2) + '] ' + title;
+                });
                 cb(null);
             },
 
@@ -116,7 +127,7 @@ router.get('/feed',
                 var carouselFeeds = clusters.slice(0, 3).map((cluster) => cluster.leading);
 
                 // Get non-personalized feeds
-                clusters.sort((a, b) => b.rank - a.rank);
+                clusters.sort((a, b) => a.rank - b.rank);
                 var nonPersonalizedFeeds = clusters.slice(0, 4).map(cluster => cluster.leading);
                 clusters = clusters.slice(4);
 
