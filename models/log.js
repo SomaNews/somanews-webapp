@@ -110,6 +110,7 @@ exports.getUserLog = function (colls, userID, start, count, callback) {
     dbconn.getCollection('logs', (err, coll) => {
         if (err) return callback(err);
         coll.aggregate([
+            {$match: {user: userID}},
             { $sort: { startedAt: -1 } },
             { $skip: start },
             { $limit: count },
